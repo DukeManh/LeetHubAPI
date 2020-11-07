@@ -87,7 +87,6 @@ class Leetcode {
         let credit: Credit = {
             csrfToken: token
         }
-        console.log('Leetcode Token:', token);
         return null;
     }
 

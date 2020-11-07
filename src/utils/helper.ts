@@ -40,7 +40,6 @@ class Helper {
         if (!cookies) {
             return "";
         }
-        console.log(cookies, key);
         const reg: RegExp = new RegExp(`${key}=(\.+?);`);
         for (const itr of cookies) {
             const res = itr.match(reg);
