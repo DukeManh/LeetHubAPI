@@ -1,0 +1,12 @@
+import Leetcode from './leetcode';
+import { Endpoint } from '../utils/interfaces';
+
+const endpoint: Endpoint = Endpoint.CN;
+
+Leetcode.build("mysecondhandemail@gmail.com", "LifeIsT0ugh", endpoint)
+    .then(leet => {
+        // tslint:disable-next-line: no-console
+    })
+    // tslint:disable-next-line: no-console
+    .catch(err => console.log(err));
+   //__cfduid=d3dde999575baa1adbede7ae8e84901ba1601343705; _gid=GA1.2.1780340199.1603914865; __cf_bm=bb9dbf4ba4bb89469a5ed68647178b5ac974febf-1603932783-1800-AZRM0GlN2HiOo/GNFhm+1JNoIPxmQfVI5fgF5DOkfIQkY6o0UExFlPDySlw/A2iQ5UvdHKqR/knUUWQm+9TvDiM=; messages="444ca179c5fc9f9ff13c89f7e6493d6870467978$[[\"__json_message\"\0540\05425\054\"You have signed out.\"]\054[\"__json_message\"\0540\05425\054\"Successfully signed in as DukeManh.\"]\054[\"__json_message\"\0540\05425\054\"You have signed out.\"]\054[\"__json_message\"\0540\05425\054\"Successfully signed in as DukeManh.\"]\054[\"__json_message\"\0540\05425\054\"You have signed out.\"]\054[\"__json_message\"\0540\05425\054\"Successfully signed in as DukeManh.\"]\054[\"__json_message\"\0540\05425\054\"You have signed out.\"]\054[\"__json_message\"\0540\05425\054\"Successfully signed in as DukeManh.\"]\054[\"__json_message\"\0540\05425\054\"You have signed out.\"]\054[\"__json_message\"\0540\05425\054\"Successfully signed in as DukeManh.\"]\054[\"__json_message\"\0540\05425\054\"You have signed out.\"]\054[\"__json_message\"\0540\05425\054\"Successfully signed in as DukeManh.\"]]"; LEETCODE_SESSION=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfYXV0aF91c2VyX2lkIjoiMjM2OTI4MyIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImFsbGF1dGguYWNjb3VudC5hdXRoX2JhY2tlbmRzLkF1dGhlbnRpY2F0aW9uQmFja2VuZCIsIl9hdXRoX3VzZXJfaGFzaCI6IjJjNzlmZDc5Mjk1ZmJlMTMwMmUxY2YyN2Q5M2IyMzkwMmViYTc5ZTQiLCJpZCI6MjM2OTI4MywiZW1haWwiOiJtYW5oZHVjZGtjYkBnbWFpbC5jb20iLCJ1c2VybmFtZSI6IkR1a2VNYW5oIiwidXNlcl9zbHVnIjoiZHVrZW1hbmgiLCJhdmF0YXIiOiJodHRwczovL2Fzc2V0cy5sZWV0Y29kZS5jb20vdXNlcnMvZHVrZW1hbmgvYXZhdGFyXzE1ODk4NDE4ODQucG5nIiwicmVmcmVzaGVkX2F0IjoxNjAzOTMyNzg4LCJpcCI6IjIwOS4xNDEuMTk3LjEyMyIsImlkZW50aXR5IjoiZTNmNmZlMTc4ZjQ5NWEzOWMyZDBlODcwMTZhNGFhNjQiLCJzZXNzaW9uX2lkIjozNTExMTYzLCJfc2Vzc2lvbl9leHBpcnkiOjEyMDk2MDB9.VqrILV8WwuJDzGoSMnf-89FKl91_7u5M8iaAt_kyz74; _gat=1
