@@ -24,10 +24,13 @@ class Helper {
         return await request({
             method: options.method || "GET",
             uri: options.url,
-            followRedirect: false,
+            followRedirect: options.followRedirect,
+            followAllRedirects: options.followAllRedirects,
             headers: {
                 "X-Requested-With": 'XMLHttpRequest',
                 Referer: options.referer || Helper.uris.base,
+                Cookie: options.cookie ? options.cookie : (this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : ''),
+                ...options.extra,
             },
             resolveWithFullResponse: options.resolveWithFullResponse,
             form: options.form,
@@ -57,7 +60,7 @@ class Helper {
                 headers: {
                     Orgin: options.origin || Helper.uris.base,
                     Referer: options.referer || Helper.uris.base,
-                    Cookie: `LEETCODE_SESSION=${Helper.credit.session}`,
+                    cookie: this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : '',
                     "X-Requested-With": 'XMLHttpRequest',
                     "X-CSRFToken": Helper.credit.csrfToken,
                 }

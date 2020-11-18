@@ -3,8 +3,20 @@ interface HttpRequestOptions {
     url: string;
     referer?: string;
     resolveWithFullResponse?: boolean; // get full response instead of just the body
+    followAllRedirects?: boolean;
+    followRedirect?: any;
+    maxRedirects?: number;
     form?: any;
     body?: any;
+    cookie?: string;
+    extra?: {
+        accept?: string;
+        "user-agent"?: string;
+        "cache-control"?: string;
+        "accept-language"?: string;
+        commit?: string;
+        authenticity_token?: string;
+    }
 }
 
 interface GraphQLOptions {
@@ -20,6 +32,7 @@ interface Uris {
     graphql: string;
     problemsAll: string;
     problem: string;
+    problemSet: string;
     submission: string;
 }
 
