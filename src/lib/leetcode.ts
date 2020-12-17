@@ -3,11 +3,61 @@ import { Uris, Credit, Endpoint, HttpRequestOptions } from '../utils/interfaces'
 import { StatusCodeError } from 'request-promise-native/errors';
 import cheerio from 'cheerio';
 import config from './config';
+import { gql } from 'graphql-request'
 
 class Leetcode {
     session?: string;
     csrfToken: string;
 
+    static queries: any = {
+        globalData: gql`
+            query globalData {
+                userCountryCode
+                userStatus {
+                    isPremium
+                    username
+                    realName
+                    avatar
+                }
+            }`,
+        userProfile: gql`
+            query getUserProfile($username: String!) {
+                matchedUser(username: $username) {
+                    username
+                    githubUrl 
+                    profile {
+                        realName
+                        websites
+                        countryName
+                        skillTags
+                        company
+                        school
+                        starRating
+                        aboutMe
+                        userAvatar
+                        reputation
+                        ranking
+                        __typename
+                    }
+                    submitStats {
+                        acSubmissionNum {
+                            difficulty
+                            count
+                            submissions
+                            __typename
+                        }
+                        totalSubmissionNum {
+                            difficulty
+                            count
+                            submissions
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+            }
+            `,
+    }
     static uris: Uris;
     static setUris(uris: Uris): void {
         Leetcode.uris = uris;
@@ -29,10 +79,14 @@ class Leetcode {
         Helper.switchEndPoint(endpoint);
         let credit: Credit;
         if (endpoint === Endpoint.CN) {
-            credit = await this.login(username, password);
+            credit = await this.login(username, password).catch(err => {
+                throw new Error(err);
+            });
         }
         else {
-            credit = await this.loginWithGitHub(username, password);
+            credit = await this.loginWithGitHub(username, password).catch(err => {
+                throw new Error(err);
+            });
         }
         Helper.setCredit(credit);
         return new Leetcode(credit);
@@ -86,8 +140,6 @@ class Leetcode {
     static async loginWithGitHub(username: string, password: string): Promise<Credit> {
         let credit: Credit;
 
-
-        // fetch github login page
         const githubResponse = await Helper.HttpRequest({
             url: config.gitHub.login,
             method: "GET",
@@ -107,7 +159,7 @@ class Leetcode {
         const authenticityToken: string = $('input[name=authenticity_token]').attr('value');
         const commit = "Sign in";
 
-        let cookie = `_gh_sess=${ghSess}; logged_in=no`;
+        let cookie = `_gh_sess=${ghSess};logged_in=no;`;
         let dotcomUser: string;
         let loggedIn: string;
         let userSession: string;
@@ -147,7 +199,7 @@ class Leetcode {
         let leetcodeSession: string;
         let location: string;
         let referer: string;
-        cookie = `csrftoken=${token}; LEETCODE_SESSION=${leetcodeSession}`;
+        cookie = `csrftoken=${token};LEETCODE_SESSION=${leetcodeSession};`;
 
         response = await Helper.HttpRequest({
             url: config.gitHub.authorize,
@@ -158,31 +210,37 @@ class Leetcode {
             resolveWithFullResponse: true,
             cookie,
             extra: {
+                "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36 OPR/72.0.3815.186",
+                "accept-language": "en-US,en;q=0.5",
+                "cache-control": "max-age=0",
                 accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-            }
+            },
         })
             .catch(redirect => {
                 leetcodeSession = Helper.parseCookies(redirect.response.headers['set-cookie'], 'LEETCODE_SESSION');
+                token = Helper.parseCookies(redirect.response.headers['set-cookie'], 'csrftoken');
                 location = redirect.response.headers.location;
-                cookie = `_gh_sess=${ghSess};dotcome_user=${dotcomUser};logged_in=${loggedIn};user_session=${userSession}`;
+                cookie = `_gh_sess=${ghSess}; dotcom_use=${dotcomUser};logged_in=${loggedIn};user_session=${userSession};`;
             });
-
 
         response = await Helper.HttpRequest({
             url: location,
             method: "GET",
-            referer: config.gitHub.authorize,
+            referer: this.uris.login,
             resolveWithFullResponse: true,
             followAllRedirects: false,
             followRedirect: false,
             cookie,
+            extra: {
+                accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            }
         })
-            .catch(redirect => {
-                ghSess = Helper.parseCookies(redirect.response.headers['set-cookie'], '_gh_sess');
-                userSession = Helper.parseCookies(redirect.response.headers['set-cookie'], 'user_session')
+            .catch(redirect2 => {
+                ghSess = Helper.parseCookies(redirect2.response.headers['let-cookie'], '_gh_sess');
+                userSession = Helper.parseCookies(redirect2.response.headers['let-cookie'], 'user_session')
                 referer = location;
-                location = redirect.response.headers.location;
-                cookie = `csrftoken=${token};LEETCODE_SESSION=${leetcodeSession}`;
+                location = redirect2.response.headers.location;
+                cookie = `csrftoken=${token};LEETCODE_SESSION=${leetcodeSession};`;
             });
 
         response = await Helper.HttpRequest({
@@ -193,33 +251,37 @@ class Leetcode {
             followAllRedirects: false,
             followRedirect: false,
             cookie,
-        }).catch(redirect3 => {
-            leetcodeSession = Helper.parseCookies(redirect3.response.headers['set-cookie'], 'LEETCODE_SESSION');
-            token = Helper.parseCookies(redirect3.response.headers['set-cookie'], 'csrftoken');
-            credit = {
-                session: leetcodeSession,
-                csrfToken: token,
+            extra: {
+                accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
             }
-        });
-
+        })
+            .catch(redirect3 => {
+                leetcodeSession = Helper.parseCookies(redirect3.response.headers['set-cookie'], 'LEETCODE_SESSION');
+                token = Helper.parseCookies(redirect3.response.headers['set-cookie'], 'csrftoken');
+                credit = {
+                    session: leetcodeSession,
+                    csrfToken: token,
+                }
+            })
         return credit;
     }
 
-    async getProfile(): Promise<string> {
-        const response: any = await Helper.GraphQlRequest({
-            query: `
-            {
-                    user{
-                        username
-                    }
-            }
-            `,
-        });
+    async getGlobalData(): Promise<any> {
+        return await Helper.GraphQlRequest({
+            query: Leetcode.queries.globalData
+        })
+    }
 
-        return response.user;
+    async getProfile(username: string): Promise<any> {
+        const response: any = await Helper.GraphQlRequest({
+            query: Leetcode.queries.userProfile,
+            variables: {
+                username
+            }
+        });
+        return response;
     }
 
 }
-
 
 export default Leetcode;

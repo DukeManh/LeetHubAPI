@@ -25,6 +25,6 @@ export default {
         base: "https://github.com/",
         login: "https://github.com/login/",
         session: "https://github.com/session/",
-        authorize: "https://leetcode.com/accounts/github/login/",
+        authorize: "https://leetcode.com/accounts/github/login/?next=%2F",
     }
 }

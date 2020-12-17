@@ -7,6 +7,7 @@ exports.default = {
             login: "https://leetcode.com/accounts/login/",
             graphql: "https://leetcode.com/graphql",
             problemsAll: "https://leetcode.com/api/problems/all/",
+            problemSet: "https://leetcode.com/problemset/all/",
             problem: "https://leetcode.com/problems/$slug",
             submit: "https://leetcode.com/problems/$slug/submit/",
             submission: "https://leetcode.com/submissions/detail/$id/",
@@ -16,6 +17,7 @@ exports.default = {
             login: "https://leetcode-cn.com/accounts/login/",
             graphql: "https://leetcode-cn.com/graphql",
             problemsAll: "https://leetcode-cn.com/api/problems/all/",
+            problemSet: "https://leetcode-cn.com/problemset/all/",
             problem: "https://leetcode-cn.com/problems/$slug",
             submit: "https://leetcode-cn.com/problems/$slug/submit/",
             submission: "https://leetcode-cn.com/submissions/detail/$id/",
@@ -25,7 +27,7 @@ exports.default = {
         base: "https://github.com/",
         login: "https://github.com/login/",
         session: "https://github.com/session/",
-        authorize: "https://leetcode.com/accounts/github/login/",
+        authorize: "https://leetcode.com/accounts/github/login/?next=%2F",
     }
 };
 //# sourceMappingURL=config.js.map
