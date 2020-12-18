@@ -70,7 +70,7 @@ query globalData {
 `
 
 Helper.GraphQlRequest({
-    query: global,
+    query: profile,
     variables: {
         username: 'DukeManh'
     }

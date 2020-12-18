@@ -30,7 +30,7 @@ app.use(morgan_1.default('tiny'));
 app.use(cookie_parser_1.default());
 function authorize(req, res, next) {
     const cookie = req.cookies;
-    if (!cookie.LeetcodeCookie) {
+    if (!cookie.csrftoken && !cookie.session) {
         res.redirect('/');
     }
     else {

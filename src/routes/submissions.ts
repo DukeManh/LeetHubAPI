@@ -13,10 +13,10 @@ Submissions.route('/')
     .get((req, res) => {
         fetchSubs()
             .then(subs => {
-                subs.stat_status_pairs = subs.stat_status_pairs.filter(ssp => ssp.status === "ac")
+                subs.stat_status_pairs = subs.stat_status_pairs.filter(ssp => ssp.status)
                 res.status(200).json(subs);
             })
-            .catch(err => res.status(500).send(err));
+            .catch(err => res.status(400).send(err));
     });
 
 

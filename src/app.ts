@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 function authorize(req: any, res: any, next: any) {
     const cookie: any = req.cookies;
-    if (!cookie.LeetcodeCookie) {
+    if (!cookie.csrftoken && !cookie.session) {
         res.redirect('/');
     }
     else {

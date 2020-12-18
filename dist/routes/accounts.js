@@ -21,7 +21,6 @@ Accounts.route('/')
             csrfToken: cookie.csrftoken
         }, cookie.endpoint)
             .then(user => {
-            console.log(user);
             res.status(200).json(user);
         })
             .catch(err => res.status(401).send());

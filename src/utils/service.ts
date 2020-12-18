@@ -26,7 +26,6 @@ async function login({ username, password, end }): Promise<any> {
 export async function build(credit: Credit, endpoint: string) {
     let leetcode: Leetcode = new Leetcode(credit);
     Leetcode.setUris((endpoint === 'US' ? config.uri.us : config.uri.cn));
-    console.log(leetcode.Credit);
     const globalData = await leetcode.getGlobalData().catch(err => { throw new Error(err) });
     return {
         credit: leetcode.Credit,

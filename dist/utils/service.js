@@ -38,7 +38,6 @@ function build(credit, endpoint) {
     return __awaiter(this, void 0, void 0, function* () {
         let leetcode = new leetcode_1.default(credit);
         leetcode_1.default.setUris((endpoint === 'US' ? config_1.default.uri.us : config_1.default.uri.cn));
-        console.log(leetcode.Credit);
         const globalData = yield leetcode.getGlobalData().catch(err => { throw new Error(err); });
         return Object.assign({ credit: leetcode.Credit }, globalData);
     });

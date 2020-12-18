@@ -45,7 +45,6 @@ class Helper {
     // extract key from cookies
     static parseCookies(cookies, key) {
         if (!cookies) {
-            console.log(cookies);
             return "";
         }
         const reg = new RegExp(`${key}=(\.+?);`);
