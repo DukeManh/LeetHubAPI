@@ -46,10 +46,12 @@ class Problem {
                     topicTags{
                         name
                     }
-                    codeSnippets{
+                    stats
+                    codeSnippets {
                         lang
                         langSlug
                         code
+                        __typename
                     }
                 }
             }`,
@@ -60,7 +62,7 @@ class Problem {
             const question = response.question;
             this.id = Number(question.questionId);
             this.title = question.title;
-            this.difficulty = helper_1.Helper.difficultyMap(question.difficulty);
+            this.difficulty = question.difficulty;
             this.status = helper_1.Helper.statusMap(question.status);
             this.tag = question.topicTags.map((tag) => {
                 return tag.name;
@@ -69,7 +71,7 @@ class Problem {
             this.totalAccepted = stats.totalAcceptedRaw;
             this.totalSubmission = stats.totalSubmissionRaw;
             this.sampleTestCase = question.sampleTestCase;
-            this.content = question.content;
+            this.content = question.content.replace(/<p>&nbsp;<\/p>/g, '').replace(/\n\n/g, '\n');
             this.codeSnippets = question.codeSnippets;
             return this;
         });
@@ -85,8 +87,8 @@ class Problem {
                     query: `
                 query Submissions($offset: Int!, $limit: Int!, $questionSlug: String!){
                     submissionList(offset: $offset, limit: $limit, questionSlug: $questionSlug){
-                        lastkey
-                        hasnext
+                        lastKey
+                        hasNext
                         submissions {
                             id
                             statusDisplay
@@ -103,13 +105,14 @@ class Problem {
                         questionSlug: this.slug,
                         offset,
                         hasNext,
+                        limit
                     }
                 });
                 hasNext = response.submissionList.hasNext;
                 const submission = response.submissionList.submissions;
                 offset += submission.length;
                 submission.map(sub => {
-                    submissions.push(new submission_1.default(Number(sub.id), helper_1.Helper.statusMap(sub.statusDisplay), sub.lang, sub.runtime, sub.timestamp, sub.url, sub.memory));
+                    submissions.push(new submission_1.default(Number(sub.id), helper_1.Helper.statusMap(sub.statusDisplay), sub.lang, sub.runtime, sub.timestamp, sub.url, sub.memory, sub.content));
                 });
             }
             return submissions;

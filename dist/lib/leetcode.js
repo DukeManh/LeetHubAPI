@@ -243,7 +243,7 @@ Leetcode.queries = {
             query getUserProfile($username: String!) {
                 matchedUser(username: $username) {
                     username
-                    githubUrl 
+                    githubUrl
                     profile {
                         realName
                         websites

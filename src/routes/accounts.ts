@@ -1,35 +1,41 @@
 import Express from 'express';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
+import cookieSession from 'cookie-session';
 import Leetcode from '../lib/leetcode';
 import { login, logout, build } from '../utils/service';
 import { Helper } from '../utils/helper';
 
 const Accounts = Express.Router();
+Accounts.use(cookieSession({
+    name: 'session',
+    secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
+    secure: false,
+    maxAge: 72 * 60 * 60 * 1000,
+}));
+
 
 Accounts.use(bodyParser.urlencoded({ extended: true }))
 Accounts.use(bodyParser.json());
-Accounts.use(cookieParser());
 
-var leetcode: Leetcode;
 
 Accounts.route('/')
     .get((req, res, next) => {
-        let cookie = req.cookies;
-        if (cookie.csrftoken && cookie.session) {
-            build(
-                {
-                    session: cookie.session,
-                    csrfToken: cookie.csrftoken
-                },
-                cookie.endpoint)
+        const session = req.session;
+        if (session.csrftoken && session.session) {
+            build({
+                session: session.session,
+                csrfToken: session.csrftoken
+            }, session.endpoint)
                 .then(user => {
                     res.status(200).json(user);
                 })
-                .catch(err => res.status(401).send());
+                .catch(err => {
+                    req.session = null;
+                    res.status(401).send(err)
+                });
         }
         else {
-            res.status(401).send();
+            res.status(401).send('Authorization failed');
         }
     })
 
@@ -37,19 +43,24 @@ Accounts.route('/login')
     .post((req, res, next) => {
         login(req.body)
             .then(user => {
-                res.cookie('csrftoken', user.credit.csrfToken);
-                res.cookie('session', user.credit.session);
-                res.cookie('username', user.userStatus.username);
-                res.cookie('endpoint', user.userStatus.requestRegion);
-                res.json(user);
+                const session: any = {
+                    csrftoken: user.credit.csrfToken,
+                    session: user.credit.session,
+                    username: user.userStatus.username,
+                    endpoint: user.userStatus.requestRegion,
+                }
+                req.session = session;
+                res.status(200).json(user);
             })
-            .catch(err => res.status(401).send(err));
+            .catch(err => {
+                res.status(401).send(err)
+            });
     });
 
 Accounts.route('/logout')
     .get((req, res, next) => {
         logout();
-        res.clearCookie('LeetcodeCookie');
+        req.session = null;
         res.status(200).send();
     })
 

@@ -1,11 +1,8 @@
 import { Helper } from './helper'
 import { Endpoint } from './interfaces';
 import Leetcode from '../lib/leetcode';
-import Submission from '../lib/submission';
 import { Credit, Uris } from './interfaces';
 import config from '../lib/config';
-
-let helper: Helper;
 
 async function login({ username, password, end }): Promise<any> {
     let endpoint: Endpoint;
@@ -24,9 +21,21 @@ async function login({ username, password, end }): Promise<any> {
 }
 
 export async function build(credit: Credit, endpoint: string) {
-    let leetcode: Leetcode = new Leetcode(credit);
-    Leetcode.setUris((endpoint === 'US' ? config.uri.us : config.uri.cn));
+    const leetcode: Leetcode = new Leetcode(credit);
+    let end: Endpoint;
+    if (endpoint === 'CN') {
+        end = Endpoint.CN;
+    }
+    else {
+        end = Endpoint.US;
+    }
+    Leetcode.setUris(config.uri[endpoint]);
+    Helper.switchEndPoint(end);
+    Helper.setCredit(credit);
     const globalData = await leetcode.getGlobalData().catch(err => { throw new Error(err) });
+    if (!globalData.userStatus.username) {
+        throw new Error('Cookies Expired');
+    }
     return {
         credit: leetcode.Credit,
         ...globalData
@@ -38,7 +47,7 @@ function logout() {
     Helper.credit = null;
 }
 
-async function fetchSubs(): Promise<any> {
+async function fetchQuestions(): Promise<any> {
     const response: any = await Helper.HttpRequest({
         url: Helper.uris.problemsAll,
         method: 'GET',
@@ -49,9 +58,4 @@ async function fetchSubs(): Promise<any> {
     return JSON.parse(response.body);
 }
 
-async function getSubList(id: number): Promise<Submission> {
-    let sub: Submission = new Submission(id);
-    return await sub.detail();
-}
-
-export { fetchSubs, login, logout, getSubList };
+export { fetchQuestions, login, logout }

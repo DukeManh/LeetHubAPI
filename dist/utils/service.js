@@ -12,13 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSubList = exports.logout = exports.login = exports.fetchSubs = exports.build = void 0;
+exports.logout = exports.login = exports.fetchQuestions = exports.build = void 0;
 const helper_1 = require("./helper");
 const interfaces_1 = require("./interfaces");
 const leetcode_1 = __importDefault(require("../lib/leetcode"));
-const submission_1 = __importDefault(require("../lib/submission"));
 const config_1 = __importDefault(require("../lib/config"));
-let helper;
 function login({ username, password, end }) {
     return __awaiter(this, void 0, void 0, function* () {
         let endpoint;
@@ -36,9 +34,21 @@ function login({ username, password, end }) {
 exports.login = login;
 function build(credit, endpoint) {
     return __awaiter(this, void 0, void 0, function* () {
-        let leetcode = new leetcode_1.default(credit);
-        leetcode_1.default.setUris((endpoint === 'US' ? config_1.default.uri.us : config_1.default.uri.cn));
+        const leetcode = new leetcode_1.default(credit);
+        let end;
+        if (endpoint === 'CN') {
+            end = interfaces_1.Endpoint.CN;
+        }
+        else {
+            end = interfaces_1.Endpoint.US;
+        }
+        leetcode_1.default.setUris(config_1.default.uri[endpoint]);
+        helper_1.Helper.switchEndPoint(end);
+        helper_1.Helper.setCredit(credit);
         const globalData = yield leetcode.getGlobalData().catch(err => { throw new Error(err); });
+        if (!globalData.userStatus.username) {
+            throw new Error('Cookies Expired');
+        }
         return Object.assign({ credit: leetcode.Credit }, globalData);
     });
 }
@@ -48,7 +58,7 @@ function logout() {
     helper_1.Helper.credit = null;
 }
 exports.logout = logout;
-function fetchSubs() {
+function fetchQuestions() {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield helper_1.Helper.HttpRequest({
             url: helper_1.Helper.uris.problemsAll,
@@ -59,12 +69,5 @@ function fetchSubs() {
         return JSON.parse(response.body);
     });
 }
-exports.fetchSubs = fetchSubs;
-function getSubList(id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let sub = new submission_1.default(id);
-        return yield sub.detail();
-    });
-}
-exports.getSubList = getSubList;
+exports.fetchQuestions = fetchQuestions;
 //# sourceMappingURL=service.js.map

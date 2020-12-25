@@ -30,6 +30,7 @@ class Submission {
         this.runtime = response.match(/runtime:\s'([^']*)'/)[1];
         this.status = Helper.statusMap(response.match(/parseInt\('(\d+)', 10/)[1]);
         this.code = response.match(/submissionCode:\s'([^']*)'/)[1];
+        this.code = JSON.parse('"' + this.code + '"');
         return this;
     }
 }

@@ -5,46 +5,58 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cookie_session_1 = __importDefault(require("cookie-session"));
 const service_1 = require("../utils/service");
 const Accounts = express_1.default.Router();
+Accounts.use(cookie_session_1.default({
+    name: 'session',
+    secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
+    secure: false,
+    maxAge: 72 * 60 * 60 * 1000,
+}));
 Accounts.use(body_parser_1.default.urlencoded({ extended: true }));
 Accounts.use(body_parser_1.default.json());
-Accounts.use(cookie_parser_1.default());
-var leetcode;
 Accounts.route('/')
     .get((req, res, next) => {
-    let cookie = req.cookies;
-    if (cookie.csrftoken && cookie.session) {
+    const session = req.session;
+    if (session.csrftoken && session.session) {
         service_1.build({
-            session: cookie.session,
-            csrfToken: cookie.csrftoken
-        }, cookie.endpoint)
+            session: session.session,
+            csrfToken: session.csrftoken
+        }, session.endpoint)
             .then(user => {
             res.status(200).json(user);
         })
-            .catch(err => res.status(401).send());
+            .catch(err => {
+            req.session = null;
+            res.status(401).send(err);
+        });
     }
     else {
-        res.status(401).send();
+        res.status(401).send('Authorization failed');
     }
 });
 Accounts.route('/login')
     .post((req, res, next) => {
     service_1.login(req.body)
         .then(user => {
-        res.cookie('csrftoken', user.credit.csrfToken);
-        res.cookie('session', user.credit.session);
-        res.cookie('username', user.userStatus.username);
-        res.cookie('endpoint', user.userStatus.requestRegion);
-        res.json(user);
+        const session = {
+            csrftoken: user.credit.csrfToken,
+            session: user.credit.session,
+            username: user.userStatus.username,
+            endpoint: user.userStatus.requestRegion,
+        };
+        req.session = session;
+        res.status(200).json(user);
     })
-        .catch(err => res.status(401).send(err));
+        .catch(err => {
+        res.status(401).send(err);
+    });
 });
 Accounts.route('/logout')
     .get((req, res, next) => {
     service_1.logout();
-    res.clearCookie('LeetcodeCookie');
+    req.session = null;
     res.status(200).send();
 });
 exports.default = Accounts;

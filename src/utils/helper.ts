@@ -85,6 +85,7 @@ class Helper {
     static statusMap(status: string): SubmissionStatus {
         switch (status) {
             case "Accepted": return SubmissionStatus.Accepted;
+            case "ac": return SubmissionStatus.Accepted;
             case "Compile Error": return SubmissionStatus["Compile Error"];
             case "Time Limit Exceeded": return SubmissionStatus["Time Limit Exceeded"];
             case "Wrong Answer": return SubmissionStatus["Wrong answer"];

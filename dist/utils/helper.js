@@ -81,6 +81,7 @@ class Helper {
     static statusMap(status) {
         switch (status) {
             case "Accepted": return interfaces_1.SubmissionStatus.Accepted;
+            case "ac": return interfaces_1.SubmissionStatus.Accepted;
             case "Compile Error": return interfaces_1.SubmissionStatus["Compile Error"];
             case "Time Limit Exceeded": return interfaces_1.SubmissionStatus["Time Limit Exceeded"];
             case "Wrong Answer": return interfaces_1.SubmissionStatus["Wrong answer"];
