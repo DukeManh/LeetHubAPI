@@ -31,21 +31,21 @@ class Helper {
     static HttpRequest(options) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield request_promise_native_1.default({
-                method: options.method || "GET",
+                method: options.method || 'GET',
                 uri: options.url,
                 followRedirect: options.followRedirect,
                 followAllRedirects: options.followAllRedirects,
-                headers: Object.assign({ "X-Requested-With": 'XMLHttpRequest', Referer: options.referer || Helper.uris.base, Cookie: options.cookie ? options.cookie : (this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : '') }, options.extra),
+                headers: Object.assign({ 'X-Requested-With': 'XMLHttpRequest', Referer: options.referer || Helper.uris.base, Cookie: options.cookie ? options.cookie : (this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : '') }, options.extra),
                 resolveWithFullResponse: options.resolveWithFullResponse,
                 form: options.form,
-                body: JSON.stringify(options.body) || "",
+                body: JSON.stringify(options.body) || '',
             });
         });
     }
     // extract key from cookies
     static parseCookies(cookies, key) {
         if (!cookies) {
-            return "";
+            return '';
         }
         const reg = new RegExp(`${key}=(\.+?);`);
         for (const itr of cookies) {
@@ -54,7 +54,7 @@ class Helper {
                 return res[1].trim();
             }
         }
-        return "";
+        return '';
     }
     static GraphQlRequest(options) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -63,8 +63,8 @@ class Helper {
                     Orgin: options.origin || Helper.uris.base,
                     Referer: options.referer || Helper.uris.base,
                     cookie: this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : '',
-                    "X-Requested-With": 'XMLHttpRequest',
-                    "X-CSRFToken": Helper.credit.csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': Helper.credit.csrfToken,
                 }
             });
             return yield client.request(options.query, options.variables || {});
@@ -80,16 +80,16 @@ class Helper {
     }
     static statusMap(status) {
         switch (status) {
-            case "Accepted": return interfaces_1.SubmissionStatus.Accepted;
-            case "ac": return interfaces_1.SubmissionStatus.Accepted;
-            case "Compile Error": return interfaces_1.SubmissionStatus["Compile Error"];
-            case "Time Limit Exceeded": return interfaces_1.SubmissionStatus["Time Limit Exceeded"];
-            case "Wrong Answer": return interfaces_1.SubmissionStatus["Wrong answer"];
-            case "10": return interfaces_1.SubmissionStatus.Accepted;
-            case "11": return interfaces_1.SubmissionStatus["Wrong Answer"];
-            case "14": return interfaces_1.SubmissionStatus["Time Limit Exceeded"];
-            case "20": return interfaces_1.SubmissionStatus["Compile Error"];
-            default: return interfaces_1.SubmissionStatus["Wrong answer"];
+            case 'Accepted': return interfaces_1.SubmissionStatus.Accepted;
+            case 'ac': return interfaces_1.SubmissionStatus.Accepted;
+            case 'Compile Error': return interfaces_1.SubmissionStatus['Compile Error'];
+            case 'Time Limit Exceeded': return interfaces_1.SubmissionStatus['Time Limit Exceeded'];
+            case 'Wrong Answer': return interfaces_1.SubmissionStatus['Wrong answer'];
+            case '0': return interfaces_1.SubmissionStatus.Accepted;
+            case '1': return interfaces_1.SubmissionStatus['Wrong Answer'];
+            case '14': return interfaces_1.SubmissionStatus['Time Limit Exceeded'];
+            case '20': return interfaces_1.SubmissionStatus['Compile Error'];
+            default: return interfaces_1.SubmissionStatus['Wrong answer'];
         }
     }
     static switchEndPoint(endPoint) {

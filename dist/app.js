@@ -41,6 +41,7 @@ app.use(cookie_session_1.default({
 function authorize(req, res, next) {
     const session = req.session;
     if (!session.csrftoken && !session.session) {
+        req.session = null;
         res.status(401).send('Authorization failed');
     }
     else {
@@ -70,6 +71,6 @@ app.all('*', (req, res, next) => {
 });
 app.listen(port, () => {
     // tslint:disable-next-line: no-console
-    return console.log("Server listening on port http://localhost:" + port);
+    return console.log('Server listening on port http://localhost:' + port);
 });
 //# sourceMappingURL=app.js.map

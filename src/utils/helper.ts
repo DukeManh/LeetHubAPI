@@ -22,26 +22,26 @@ class Helper {
     // http request with options
     static async HttpRequest(options: HttpRequestOptions): Promise<any> {
         return await request({
-            method: options.method || "GET",
+            method: options.method || 'GET',
             uri: options.url,
             followRedirect: options.followRedirect,
             followAllRedirects: options.followAllRedirects,
             headers: {
-                "X-Requested-With": 'XMLHttpRequest',
+                'X-Requested-With': 'XMLHttpRequest',
                 Referer: options.referer || Helper.uris.base,
                 Cookie: options.cookie ? options.cookie : (this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : ''),
                 ...options.extra,
             },
             resolveWithFullResponse: options.resolveWithFullResponse,
             form: options.form,
-            body: JSON.stringify(options.body) || "",
+            body: JSON.stringify(options.body) || '',
         });
     }
 
     // extract key from cookies
     static parseCookies(cookies: string[], key: string): string {
         if (!cookies) {
-            return "";
+            return '';
         }
         const reg: RegExp = new RegExp(`${key}=(\.+?);`);
         for (const itr of cookies) {
@@ -50,7 +50,7 @@ class Helper {
                 return res[1].trim();
             }
         }
-        return "";
+        return '';
     }
 
     static async GraphQlRequest(options: GraphQLOptions): Promise<any> {
@@ -61,8 +61,8 @@ class Helper {
                     Orgin: options.origin || Helper.uris.base,
                     Referer: options.referer || Helper.uris.base,
                     cookie: this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : '',
-                    "X-Requested-With": 'XMLHttpRequest',
-                    "X-CSRFToken": Helper.credit.csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': Helper.credit.csrfToken,
                 }
             }
         );
@@ -84,18 +84,18 @@ class Helper {
 
     static statusMap(status: string): SubmissionStatus {
         switch (status) {
-            case "Accepted": return SubmissionStatus.Accepted;
-            case "ac": return SubmissionStatus.Accepted;
-            case "Compile Error": return SubmissionStatus["Compile Error"];
-            case "Time Limit Exceeded": return SubmissionStatus["Time Limit Exceeded"];
-            case "Wrong Answer": return SubmissionStatus["Wrong answer"];
+            case 'Accepted': return SubmissionStatus.Accepted;
+            case 'ac': return SubmissionStatus.Accepted;
+            case 'Compile Error': return SubmissionStatus['Compile Error'];
+            case 'Time Limit Exceeded': return SubmissionStatus['Time Limit Exceeded'];
+            case 'Wrong Answer': return SubmissionStatus['Wrong answer'];
 
-            case "10": return SubmissionStatus.Accepted;
-            case "11": return SubmissionStatus["Wrong Answer"];
-            case "14": return SubmissionStatus["Time Limit Exceeded"];
-            case "20": return SubmissionStatus["Compile Error"];
+            case '0': return SubmissionStatus.Accepted;
+            case '1': return SubmissionStatus['Wrong Answer'];
+            case '14': return SubmissionStatus['Time Limit Exceeded'];
+            case '20': return SubmissionStatus['Compile Error'];
 
-            default: return SubmissionStatus["Wrong answer"];
+            default: return SubmissionStatus['Wrong answer'];
         }
     }
 

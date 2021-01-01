@@ -29,7 +29,7 @@ Questions.route('/:slug')
             .then((prob) => {
                 res.status(200).json(prob);
             }).catch((err) => {
-                res.status(404).send('Question not found');
+                res.status(404).send(err);
             });
     });
 

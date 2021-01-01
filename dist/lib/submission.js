@@ -27,8 +27,8 @@ class Submission {
     detail() {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield helper_1.Helper.HttpRequest({
-                url: helper_1.Helper.uris.submission.replace("$id", this.id.toString()),
-                method: "GET",
+                url: helper_1.Helper.uris.submission.replace('$id', this.id.toString()),
+                method: 'GET',
             });
             this.lang = response.match(/getLangDisplay:\s'([^']*)'/)[1];
             this.memory = response.match(/memory:\s'[^']*'/)[1];

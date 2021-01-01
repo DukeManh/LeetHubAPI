@@ -8,14 +8,14 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cookie_session_1 = __importDefault(require("cookie-session"));
 const service_1 = require("../utils/service");
 const Accounts = express_1.default.Router();
+Accounts.use(body_parser_1.default.urlencoded({ extended: true }));
+Accounts.use(body_parser_1.default.json());
 Accounts.use(cookie_session_1.default({
     name: 'session',
     secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
     secure: false,
     maxAge: 72 * 60 * 60 * 1000,
 }));
-Accounts.use(body_parser_1.default.urlencoded({ extended: true }));
-Accounts.use(body_parser_1.default.json());
 Accounts.route('/')
     .get((req, res, next) => {
     const session = req.session;
@@ -57,7 +57,7 @@ Accounts.route('/logout')
     .get((req, res, next) => {
     service_1.logout();
     req.session = null;
-    res.status(200).send();
+    res.end();
 });
 exports.default = Accounts;
 //# sourceMappingURL=accounts.js.map

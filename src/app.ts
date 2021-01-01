@@ -40,6 +40,7 @@ app.use(cookieSession({
 function authorize(req: any, res: any, next: any) {
     const session: any = req.session;
     if (!session.csrftoken && !session.session) {
+        req.session = null;
         res.status(401).send('Authorization failed')
     }
     else {
@@ -76,5 +77,5 @@ app.all('*', (req, res, next) => {
 
 app.listen(port, () => {
     // tslint:disable-next-line: no-console
-    return console.log("Server listening on port http://localhost:" + port);
+    return console.log('Server listening on port http://localhost:' + port);
 })

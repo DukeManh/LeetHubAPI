@@ -47,17 +47,13 @@ class Problem {
                         name
                     }
                     stats
-                    codeSnippets {
-                        lang
-                        langSlug
-                        code
-                        __typename
-                    }
                 }
             }`,
                 variables: {
                     titleSlug: this.slug,
                 }
+            }).catch(err => {
+                throw new Error(err);
             });
             const question = response.question;
             this.id = Number(question.questionId);
@@ -71,8 +67,7 @@ class Problem {
             this.totalAccepted = stats.totalAcceptedRaw;
             this.totalSubmission = stats.totalSubmissionRaw;
             this.sampleTestCase = question.sampleTestCase;
-            this.content = question.content.replace(/<p>&nbsp;<\/p>/g, '').replace(/\n\n/g, '\n');
-            this.codeSnippets = question.codeSnippets;
+            this.content = question.content.replace(/<p>&nbsp;<\/p>/g, '');
             return this;
         });
     }

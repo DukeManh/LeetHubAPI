@@ -61,7 +61,7 @@ exports.logout = logout;
 function fetchQuestions() {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield helper_1.Helper.HttpRequest({
-            url: helper_1.Helper.uris.problemsAll,
+            url: helper_1.Helper.uris.problemsAll + '?status=Solved',
             method: 'GET',
             resolveWithFullResponse: true,
             referer: helper_1.Helper.uris.problemSet

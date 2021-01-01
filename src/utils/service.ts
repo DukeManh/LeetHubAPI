@@ -1,7 +1,7 @@
 import { Helper } from './helper'
 import { Endpoint } from './interfaces';
 import Leetcode from '../lib/leetcode';
-import { Credit, Uris } from './interfaces';
+import { Credit } from './interfaces';
 import config from '../lib/config';
 
 async function login({ username, password, end }): Promise<any> {
@@ -49,7 +49,7 @@ function logout() {
 
 async function fetchQuestions(): Promise<any> {
     const response: any = await Helper.HttpRequest({
-        url: Helper.uris.problemsAll,
+        url: Helper.uris.problemsAll + '?status=Solved',
         method: 'GET',
         resolveWithFullResponse: true,
         referer: Helper.uris.problemSet

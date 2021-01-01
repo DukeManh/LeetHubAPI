@@ -1,11 +1,12 @@
 import Express from 'express';
 import bodyParser from 'body-parser';
 import cookieSession from 'cookie-session';
-import Leetcode from '../lib/leetcode';
 import { login, logout, build } from '../utils/service';
-import { Helper } from '../utils/helper';
-
 const Accounts = Express.Router();
+
+
+Accounts.use(bodyParser.urlencoded({ extended: true }))
+Accounts.use(bodyParser.json());
 Accounts.use(cookieSession({
     name: 'session',
     secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
@@ -13,9 +14,6 @@ Accounts.use(cookieSession({
     maxAge: 72 * 60 * 60 * 1000,
 }));
 
-
-Accounts.use(bodyParser.urlencoded({ extended: true }))
-Accounts.use(bodyParser.json());
 
 
 Accounts.route('/')
@@ -61,7 +59,7 @@ Accounts.route('/logout')
     .get((req, res, next) => {
         logout();
         req.session = null;
-        res.status(200).send();
+        res.end();
     })
 
 export default Accounts;

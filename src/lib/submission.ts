@@ -1,4 +1,4 @@
-import { Uris, SubmissionStatus } from "../utils/interfaces";
+import { Uris, SubmissionStatus } from '../utils/interfaces';
 import { Helper } from '../utils/helper';
 
 class Submission {
@@ -21,8 +21,8 @@ class Submission {
 
     async detail(): Promise<Submission> {
         const response = await Helper.HttpRequest({
-            url: Helper.uris.submission.replace("$id", this.id.toString()),
-            method: "GET",
+            url: Helper.uris.submission.replace('$id', this.id.toString()),
+            method: 'GET',
         });
 
         this.lang = response.match(/getLangDisplay:\s'([^']*)'/)[1];

@@ -11,9 +11,9 @@ interface HttpRequestOptions {
     cookie?: string;
     extra?: {
         accept?: string;
-        "user-agent"?: string;
-        "cache-control"?: string;
-        "accept-language"?: string;
+        'user-agent'?: string;
+        'cache-control'?: string;
+        'accept-language'?: string;
         commit?: string;
         authenticity_token?: string;
     }
@@ -47,16 +47,16 @@ enum Endpoint {
 }
 
 enum ProblemDifficulty {
-    "Easy",
-    "Medium",
-    "Hard",
+    'Easy',
+    'Medium',
+    'Hard',
 }
 
 enum SubmissionStatus {
-    "Accepted",
-    "Compile Error",
-    "Wrong answer",
-    "Time Limit Exceeded",
+    'Accepted',
+    'Compile Error',
+    'Wrong answer',
+    'Time Limit Exceeded',
 }
 
 
