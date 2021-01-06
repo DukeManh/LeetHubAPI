@@ -26,13 +26,13 @@ class Helper {
             uri: options.url,
             followRedirect: options.followRedirect,
             followAllRedirects: options.followAllRedirects,
+            resolveWithFullResponse: (typeof options.resolveWithFullResponse === 'undefined') ? true : options.resolveWithFullResponse,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                Referer: (options.referer !== undefined) ? options.referer : Helper.uris.base,
-                Cookie: options.cookie ? options.cookie : (this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : ''),
+                Referer: (typeof options.referer !== 'undefined') ? options.referer : Helper.uris.base,
+                Cookie: (typeof options.cookie !== 'undefined') ? options.cookie : (this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : ''),
                 ...options.extra,
             },
-            resolveWithFullResponse: options.resolveWithFullResponse || true,
             form: options.form,
             body: JSON.stringify(options.body) || '',
         });
@@ -126,7 +126,7 @@ class Helper {
             case 'ac': return SubmissionStatus.Accepted;
             case 'Compile Error': return SubmissionStatus['Compile Error'];
             case 'Time Limit Exceeded': return SubmissionStatus['Time Limit Exceeded'];
-            case 'Wrong Answer': return SubmissionStatus['Wrong answer'];
+            case 'Wrong Answer': return SubmissionStatus["Wrong answer"];
 
             case '0': return SubmissionStatus.Accepted;
             case '1': return SubmissionStatus['Wrong Answer'];

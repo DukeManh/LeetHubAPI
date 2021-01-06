@@ -13,12 +13,14 @@ async function login({ username, password, end }): Promise<any> {
         endpoint = Endpoint.US;
     }
     const leetcode: Leetcode = await Leetcode.build(username, password, endpoint).catch(err => { throw new Error(err) });
-    const globalData = await leetcode.getGlobalData().catch(err => { throw new Error(err) });
+    const user = await leetcode.getGlobalData().catch(err => { throw new Error(err) });
+    const profile = await leetcode.getProfile(user.userStatus.username);
     return {
         credit: leetcode.Credit,
-        ...globalData
+        ...user,
+        ...profile.matchedUser.submitStats,
     };
-}
+};
 
 export async function build(credit: Credit, endpoint: string) {
     const leetcode: Leetcode = new Leetcode(credit);
@@ -32,13 +34,15 @@ export async function build(credit: Credit, endpoint: string) {
     Leetcode.setUris(config.uri[endpoint]);
     Helper.switchEndPoint(end);
     Helper.setCredit(credit);
-    const globalData = await leetcode.getGlobalData().catch(err => { throw new Error(err) });
-    if (!globalData.userStatus.username) {
+    const user = await leetcode.getGlobalData().catch(err => { throw new Error(err) });
+    if (!user.userStatus.username) {
         throw new Error('Cookies Expired');
     }
+    const profile = await leetcode.getProfile(user.userStatus.username);
     return {
         credit: leetcode.Credit,
-        ...globalData
+        ...user,
+        ...profile.matchedUser.submitStats,
     };
 }
 

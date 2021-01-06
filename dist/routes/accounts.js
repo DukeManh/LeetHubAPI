@@ -43,6 +43,7 @@ Accounts.route('/login')
         const session = {
             csrftoken: user.credit.csrfToken,
             session: user.credit.session,
+            ghCookie: user.credit.ghCookie,
             username: user.userStatus.username,
             endpoint: user.userStatus.requestRegion,
         };

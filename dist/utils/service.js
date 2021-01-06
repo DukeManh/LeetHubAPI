@@ -27,11 +27,13 @@ function login({ username, password, end }) {
             endpoint = interfaces_1.Endpoint.US;
         }
         const leetcode = yield leetcode_1.default.build(username, password, endpoint).catch(err => { throw new Error(err); });
-        const globalData = yield leetcode.getGlobalData().catch(err => { throw new Error(err); });
-        return Object.assign({ credit: leetcode.Credit }, globalData);
+        const user = yield leetcode.getGlobalData().catch(err => { throw new Error(err); });
+        const profile = yield leetcode.getProfile(user.userStatus.username);
+        return Object.assign(Object.assign({ credit: leetcode.Credit }, user), profile.matchedUser.submitStats);
     });
 }
 exports.login = login;
+;
 function build(credit, endpoint) {
     return __awaiter(this, void 0, void 0, function* () {
         const leetcode = new leetcode_1.default(credit);
@@ -45,11 +47,12 @@ function build(credit, endpoint) {
         leetcode_1.default.setUris(config_1.default.uri[endpoint]);
         helper_1.Helper.switchEndPoint(end);
         helper_1.Helper.setCredit(credit);
-        const globalData = yield leetcode.getGlobalData().catch(err => { throw new Error(err); });
-        if (!globalData.userStatus.username) {
+        const user = yield leetcode.getGlobalData().catch(err => { throw new Error(err); });
+        if (!user.userStatus.username) {
             throw new Error('Cookies Expired');
         }
-        return Object.assign({ credit: leetcode.Credit }, globalData);
+        const profile = yield leetcode.getProfile(user.userStatus.username);
+        return Object.assign(Object.assign({ credit: leetcode.Credit }, user), profile.matchedUser.submitStats);
     });
 }
 exports.build = build;

@@ -22,6 +22,7 @@ class Leetcode {
     constructor(credit) {
         this.session = credit.session;
         this.csrfToken = credit.csrfToken;
+        this.ghCookie = credit.githubCookie;
     }
     static setUris(uris) {
         Leetcode.uris = uris;
@@ -250,36 +251,12 @@ Leetcode.queries = {
     userProfile: graphql_request_1.gql `
             query getUserProfile($username: String!) {
                 matchedUser(username: $username) {
-                    username
-                    githubUrl
-                    profile {
-                        realName
-                        websites
-                        countryName
-                        skillTags
-                        company
-                        school
-                        starRating
-                        aboutMe
-                        userAvatar
-                        reputation
-                        ranking
-                        __typename
-                    }
                     submitStats {
                         acSubmissionNum {
                             difficulty
                             count
                             submissions
-                            __typename
                         }
-                        totalSubmissionNum {
-                            difficulty
-                            count
-                            submissions
-                            __typename
-                        }
-                        __typename
                     }
                 }
             }

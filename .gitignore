@@ -1,4 +1,4 @@
 node_modules
 src/lib/test.ts
-.vscode
+.vscode/*
 tslint.json

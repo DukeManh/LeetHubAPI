@@ -20,18 +20,23 @@ class Submission {
     ) { }
 
     async detail(): Promise<Submission> {
-        const response = await Helper.HttpRequest({
-            url: Helper.uris.submission.replace('$id', this.id.toString()),
-            method: 'GET',
-        });
-
-        this.lang = response.match(/getLangDisplay:\s'([^']*)'/)[1];
-        this.memory = response.match(/memory:\s'[^']*'/)[1];
-        this.runtime = response.match(/runtime:\s'([^']*)'/)[1];
-        this.status = Helper.statusMap(response.match(/parseInt\('(\d+)', 10/)[1]);
-        this.code = response.match(/submissionCode:\s'([^']*)'/)[1];
-        this.code = JSON.parse('"' + this.code + '"');
-        return this;
+        try {
+            const response = await Helper.HttpRequest({
+                url: Helper.uris.submission.replace('$id', this.id.toString()),
+                method: 'GET',
+                resolveWithFullResponse: false
+            });
+            this.lang = response.match(/getLangDisplay:\s'([^']*)'/)[1];
+            this.memory = response.match(/memory:\s'[^']*'/)[1];
+            this.runtime = response.match(/runtime:\s'([^']*)'/)[1];
+            this.status = Helper.statusMap(response.match(/parseInt\('(\d+)', 10/)[1]);
+            this.code = response.match(/submissionCode:\s'([^']*)'/)[1];
+            this.code = JSON.parse('"' + this.code + '"');
+            return this;
+        }
+        catch (err) {
+            throw new Error(err);
+        }
     }
 }
 

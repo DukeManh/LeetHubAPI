@@ -18,36 +18,12 @@ Helper.setCredit(credit);
 const profile = gql`
             query getUserProfile($username: String!) {
                 matchedUser(username: $username) {
-                    username
-                    githubUrl
-                    profile {
-                        realName
-                        websites
-                        countryName
-                        skillTags
-                        company
-                        school
-                        starRating
-                        aboutMe
-                        userAvatar
-                        reputation
-                        ranking
-                        __typename
-                    }
                     submitStats {
                         acSubmissionNum {
                             difficulty
                             count
                             submissions
-                            __typename
                         }
-                        totalSubmissionNum {
-                            difficulty
-                            count
-                            submissions
-                            __typename
-                        }
-                        __typename
                     }
                 }
             }
@@ -71,15 +47,15 @@ query globalData {
 }
 `
 
-// Helper.GraphQlRequest({
-//     query: global,
-//     variables: {
-//         username: 'DukeManh'
-//     }
-// }).then((res) => {
-//     console.log(res);
-// })
-//     .catch(err => console.log(err));
+Helper.GraphQlRequest({
+    query: global,
+    variables: {
+        username: 'DukeManh'
+    }
+}).then((res) => {
+    console.log(res);
+})
+    .catch(err => console.log(err));
 
 
 // const slug = 'two-sum';
@@ -92,6 +68,3 @@ query globalData {
 //     console.log(err);
 // });
 
-const content = "<div></div>";
-
-const $ = cheerio.load(content);

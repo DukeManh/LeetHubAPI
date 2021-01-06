@@ -8,6 +8,7 @@ import { gql } from 'graphql-request'
 class Leetcode {
     session?: string;
     csrfToken: string;
+    ghCookie?: string;
 
     static queries: any = {
         globalData: gql`
@@ -23,36 +24,12 @@ class Leetcode {
         userProfile: gql`
             query getUserProfile($username: String!) {
                 matchedUser(username: $username) {
-                    username
-                    githubUrl
-                    profile {
-                        realName
-                        websites
-                        countryName
-                        skillTags
-                        company
-                        school
-                        starRating
-                        aboutMe
-                        userAvatar
-                        reputation
-                        ranking
-                        __typename
-                    }
                     submitStats {
                         acSubmissionNum {
                             difficulty
                             count
                             submissions
-                            __typename
                         }
-                        totalSubmissionNum {
-                            difficulty
-                            count
-                            submissions
-                            __typename
-                        }
-                        __typename
                     }
                 }
             }
@@ -66,6 +43,7 @@ class Leetcode {
     constructor(credit: Credit) {
         this.session = credit.session;
         this.csrfToken = credit.csrfToken;
+        this.ghCookie = credit.githubCookie;
     }
 
     get Credit(): Credit {

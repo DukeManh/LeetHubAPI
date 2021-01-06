@@ -35,8 +35,8 @@ class Helper {
                 uri: options.url,
                 followRedirect: options.followRedirect,
                 followAllRedirects: options.followAllRedirects,
-                headers: Object.assign({ 'X-Requested-With': 'XMLHttpRequest', Referer: options.referer || Helper.uris.base, Cookie: options.cookie ? options.cookie : (this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : '') }, options.extra),
-                resolveWithFullResponse: options.resolveWithFullResponse || true,
+                resolveWithFullResponse: (typeof options.resolveWithFullResponse === 'undefined') ? true : options.resolveWithFullResponse,
+                headers: Object.assign({ 'X-Requested-With': 'XMLHttpRequest', Referer: (typeof options.referer !== 'undefined') ? options.referer : Helper.uris.base, Cookie: (typeof options.cookie !== 'undefined') ? options.cookie : (this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : '') }, options.extra),
                 form: options.form,
                 body: JSON.stringify(options.body) || '',
             });
@@ -93,6 +93,21 @@ class Helper {
             case 'javascript':
                 extension = 'js';
                 break;
+            case 'rust':
+                extension = 'rs';
+                break;
+            case 'kotlin':
+                extension = 'kt';
+                break;
+            case 'golang':
+                extension = 'go';
+                break;
+            case 'csharp':
+                extension = 'cs';
+                break;
+            case 'ruby':
+                extension = 'rb';
+                break;
             default:
                 extension = language;
                 break;
@@ -105,7 +120,7 @@ class Helper {
             case 'ac': return interfaces_1.SubmissionStatus.Accepted;
             case 'Compile Error': return interfaces_1.SubmissionStatus['Compile Error'];
             case 'Time Limit Exceeded': return interfaces_1.SubmissionStatus['Time Limit Exceeded'];
-            case 'Wrong Answer': return interfaces_1.SubmissionStatus['Wrong answer'];
+            case 'Wrong Answer': return interfaces_1.SubmissionStatus["Wrong answer"];
             case '0': return interfaces_1.SubmissionStatus.Accepted;
             case '1': return interfaces_1.SubmissionStatus['Wrong Answer'];
             case '14': return interfaces_1.SubmissionStatus['Time Limit Exceeded'];

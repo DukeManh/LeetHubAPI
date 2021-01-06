@@ -25,7 +25,7 @@ Submissions.route('/detail/:id')
         submission.detail().then((sub) => {
             res.status(200).json(sub);
         }).catch((err) => {
-            res.status(400).send('submission not found');
+            res.status(400).send(err);
         });
     })
 

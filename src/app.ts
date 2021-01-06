@@ -12,13 +12,14 @@ import { build } from './utils/service';
 const app = Express();
 const port = 8080;
 
-const whitelist = ['http://localhost:3000', 'https://fynoc.csb.app'];
+const whitelist = ['http://localhost:3000', '*'];
 app.disable('etag');
 const corsOptions = {
     origin(origin, callback) {
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
+            console.log(origin);
             callback(new Error('Not allowed by CORS'))
         }
     },
