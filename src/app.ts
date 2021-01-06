@@ -12,7 +12,7 @@ import { build } from './utils/service';
 const app = Express();
 const port = 8080;
 
-const whitelist = ['http://localhost:3000', 'https://fynoc.csb.app', 'http://192.168.1.97:3000'];
+const whitelist = ['http://localhost:3000', 'https://fynoc.csb.app'];
 app.disable('etag');
 const corsOptions = {
     origin(origin, callback) {
@@ -33,7 +33,7 @@ app.use(cookieSession({
     name: 'session',
     secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
     secure: false,
-    maxAge: 72 * 60 * 1000,
+    expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
 }));
 
 

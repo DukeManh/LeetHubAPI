@@ -14,7 +14,7 @@ class Submission {
         public lang?: string,
         public runtime?: string,
         public timestamps?: string,
-        public url?: URL,
+        public url?: string,
         public memory?: string,
         public code?: string,
     ) { }

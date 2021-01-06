@@ -92,121 +92,129 @@ class Leetcode {
     }
     static loginWithGitHub(username, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            let credit;
-            const githubResponse = yield helper_1.Helper.HttpRequest({
-                url: config_1.default.gitHub.login,
-                method: "GET",
-                resolveWithFullResponse: true,
-                extra: {
-                    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36 OPR/72.0.3815.186",
-                    "accept-language": "en-US,en;q=0.5",
-                    "cache-control": "max-age=0",
-                    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                },
-                referer: config_1.default.gitHub.base
-            });
-            const $ = cheerio_1.default.load(githubResponse.body);
-            let ghSess = helper_1.Helper.parseCookies(githubResponse.headers['set-cookie'], '_gh_sess');
-            const authenticityToken = $('input[name=authenticity_token]').attr('value');
-            const commit = "Sign in";
-            let cookie = `_gh_sess=${ghSess};logged_in=no;`;
-            let dotcomUser;
-            let loggedIn;
-            let userSession;
-            const gitHubLogin = yield helper_1.Helper.HttpRequest({
-                url: config_1.default.gitHub.session,
-                method: "POST",
-                referer: config_1.default.gitHub.login,
-                resolveWithFullResponse: true,
-                cookie,
-                extra: {
-                    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                },
-                form: {
-                    commit,
-                    login: username,
-                    password,
-                    authenticity_token: authenticityToken,
-                },
-                followRedirect: false,
-                followAllRedirects: false,
-            }).catch(res => {
-                ghSess = helper_1.Helper.parseCookies(res.response.headers['set-cookie'], '_gh_sess');
-                dotcomUser = helper_1.Helper.parseCookies(res.response.headers['set-cookie'], 'dotcom_user');
-                loggedIn = helper_1.Helper.parseCookies(res.response.headers['set-cookie'], 'logged_in');
-                userSession = helper_1.Helper.parseCookies(res.response.headers['set-cookie'], 'user_session');
-            });
-            let response = yield helper_1.Helper.HttpRequest({
-                url: Leetcode.uris.login,
-                method: "GET",
-                resolveWithFullResponse: true,
-            });
-            let token = helper_1.Helper.parseCookies(response.headers['set-cookie'], 'csrftoken');
-            let leetcodeSession;
-            let location;
-            let referer;
-            cookie = `csrftoken=${token};LEETCODE_SESSION=${leetcodeSession};`;
-            response = yield helper_1.Helper.HttpRequest({
-                url: config_1.default.gitHub.authorize,
-                method: "GET",
-                referer: this.uris.login,
-                followRedirect: false,
-                followAllRedirects: false,
-                resolveWithFullResponse: true,
-                cookie,
-                extra: {
-                    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36 OPR/72.0.3815.186",
-                    "accept-language": "en-US,en;q=0.5",
-                    "cache-control": "max-age=0",
-                    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                },
-            })
-                .catch(redirect => {
-                leetcodeSession = helper_1.Helper.parseCookies(redirect.response.headers['set-cookie'], 'LEETCODE_SESSION');
-                token = helper_1.Helper.parseCookies(redirect.response.headers['set-cookie'], 'csrftoken');
-                location = redirect.response.headers.location;
-                cookie = `_gh_sess=${ghSess}; dotcom_use=${dotcomUser};logged_in=${loggedIn};user_session=${userSession};`;
-            });
-            response = yield helper_1.Helper.HttpRequest({
-                url: location,
-                method: "GET",
-                referer: this.uris.login,
-                resolveWithFullResponse: true,
-                followAllRedirects: false,
-                followRedirect: false,
-                cookie,
-                extra: {
-                    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                }
-            })
-                .catch(redirect2 => {
-                ghSess = helper_1.Helper.parseCookies(redirect2.response.headers['let-cookie'], '_gh_sess');
-                userSession = helper_1.Helper.parseCookies(redirect2.response.headers['let-cookie'], 'user_session');
-                referer = location;
-                location = redirect2.response.headers.location;
+            try {
+                let credit;
+                // fetch login page
+                const githubResponse = yield helper_1.Helper.HttpRequest({
+                    url: config_1.default.gitHub.login,
+                    method: "GET",
+                    extra: {
+                        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36 OPR/72.0.3815.186", "accept-language": "en-US,en;q=0.5",
+                        "cache-control": "max-age=0",
+                        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                    },
+                    referer: config_1.default.gitHub.base
+                });
+                // get authenticty token and gh_sess
+                const $ = cheerio_1.default.load(githubResponse.body);
+                let ghSess = helper_1.Helper.parseCookies(githubResponse.headers['set-cookie'], '_gh_sess');
+                const authenticityToken = $('input[name=authenticity_token]').attr('value');
+                const commit = "Sign in";
+                let cookie = `_gh_sess=${ghSess};logged_in=no;`;
+                let dotcomUser;
+                let loggedIn;
+                let userSession;
+                // login with Github usename and password
+                const gitHubLogin = yield helper_1.Helper.HttpRequest({
+                    url: config_1.default.gitHub.session,
+                    method: "POST",
+                    referer: config_1.default.gitHub.login,
+                    cookie,
+                    extra: {
+                        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                    },
+                    form: {
+                        commit,
+                        login: username,
+                        password,
+                        authenticity_token: authenticityToken,
+                    },
+                    followRedirect: false,
+                    followAllRedirects: false,
+                }).catch(res => {
+                    // parse ghSess, dotcomUser, loggedIn, useSession
+                    ghSess = helper_1.Helper.parseCookies(res.response.headers['set-cookie'], '_gh_sess');
+                    dotcomUser = helper_1.Helper.parseCookies(res.response.headers['set-cookie'], 'dotcom_user');
+                    loggedIn = helper_1.Helper.parseCookies(res.response.headers['set-cookie'], 'logged_in');
+                    userSession = helper_1.Helper.parseCookies(res.response.headers['set-cookie'], 'user_session');
+                });
+                const gitHubCookie = `_gh_sess=${ghSess}; dotcom_user=${dotcomUser};logged_in=${loggedIn};user_session=${userSession};`;
+                // fetch leetcode login page
+                let response = yield helper_1.Helper.HttpRequest({
+                    url: Leetcode.uris.login,
+                    method: "GET",
+                });
+                // leetcode csrfToken
+                let token = helper_1.Helper.parseCookies(response.headers['set-cookie'], 'csrftoken');
+                let leetcodeSession;
+                let location;
+                let referer;
                 cookie = `csrftoken=${token};LEETCODE_SESSION=${leetcodeSession};`;
-            });
-            response = yield helper_1.Helper.HttpRequest({
-                url: location,
-                method: "GET",
-                resolveWithFullResponse: true,
-                referer,
-                followAllRedirects: false,
-                followRedirect: false,
-                cookie,
-                extra: {
-                    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                }
-            })
-                .catch(redirect3 => {
-                leetcodeSession = helper_1.Helper.parseCookies(redirect3.response.headers['set-cookie'], 'LEETCODE_SESSION');
-                token = helper_1.Helper.parseCookies(redirect3.response.headers['set-cookie'], 'csrftoken');
-                credit = {
-                    session: leetcodeSession,
-                    csrfToken: token,
-                };
-            });
-            return credit;
+                // github leetcode oauth
+                response = yield helper_1.Helper.HttpRequest({
+                    url: config_1.default.gitHub.authorize,
+                    method: "GET",
+                    referer: this.uris.login,
+                    followRedirect: false,
+                    followAllRedirects: false,
+                    cookie,
+                    extra: {
+                        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36 OPR/72.0.3815.186",
+                        "accept-language": "en-US,en;q=0.5",
+                        "cache-control": "max-age=0",
+                        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                    },
+                })
+                    .catch(redirect => {
+                    leetcodeSession = helper_1.Helper.parseCookies(redirect.response.headers['set-cookie'], 'LEETCODE_SESSION');
+                    token = helper_1.Helper.parseCookies(redirect.response.headers['set-cookie'], 'csrftoken');
+                    location = redirect.response.headers.location;
+                    cookie = gitHubCookie;
+                });
+                // authenticate github
+                response = yield helper_1.Helper.HttpRequest({
+                    url: location,
+                    method: "GET",
+                    referer: this.uris.login,
+                    followAllRedirects: false,
+                    followRedirect: false,
+                    cookie,
+                    extra: {
+                        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                    }
+                })
+                    .catch(redirect2 => {
+                    ghSess = helper_1.Helper.parseCookies(redirect2.response.headers['let-cookie'], '_gh_sess');
+                    userSession = helper_1.Helper.parseCookies(redirect2.response.headers['let-cookie'], 'user_session');
+                    referer = location;
+                    location = redirect2.response.headers.location;
+                    cookie = `csrftoken=${token};LEETCODE_SESSION=${leetcodeSession};`;
+                });
+                response = yield helper_1.Helper.HttpRequest({
+                    url: location,
+                    method: "GET",
+                    referer,
+                    followAllRedirects: false,
+                    followRedirect: false,
+                    cookie,
+                    extra: {
+                        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                    }
+                })
+                    .catch(redirect3 => {
+                    leetcodeSession = helper_1.Helper.parseCookies(redirect3.response.headers['set-cookie'], 'LEETCODE_SESSION');
+                    token = helper_1.Helper.parseCookies(redirect3.response.headers['set-cookie'], 'csrftoken');
+                    credit = {
+                        session: leetcodeSession,
+                        csrfToken: token,
+                        githubCookie: gitHubCookie
+                    };
+                });
+                return credit;
+            }
+            catch (err) {
+                throw new Error(err);
+            }
         });
     }
     getGlobalData() {

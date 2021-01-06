@@ -26,5 +26,7 @@ export default {
         login: 'https://github.com/login/',
         session: 'https://github.com/session/',
         authorize: 'https://leetcode.com/accounts/github/login/?next=%2F',
+        new: 'https://github.com/new',
+        repositories: 'https://github.com/repositories',
     }
 }

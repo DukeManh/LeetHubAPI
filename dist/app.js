@@ -15,7 +15,7 @@ const helper_1 = require("./utils/helper");
 const service_1 = require("./utils/service");
 const app = express_1.default();
 const port = 8080;
-const whitelist = ['http://localhost:3000', 'https://fynoc.csb.app', 'http://192.168.1.97:3000'];
+const whitelist = ['http://localhost:3000', 'https://fynoc.csb.app'];
 app.disable('etag');
 const corsOptions = {
     origin(origin, callback) {
@@ -36,7 +36,7 @@ app.use(cookie_session_1.default({
     name: 'session',
     secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
     secure: false,
-    maxAge: 72 * 60 * 1000,
+    expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
 }));
 function authorize(req, res, next) {
     const session = req.session;

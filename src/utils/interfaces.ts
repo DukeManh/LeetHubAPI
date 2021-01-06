@@ -2,7 +2,7 @@ interface HttpRequestOptions {
     method: string;
     url: string;
     referer?: string;
-    resolveWithFullResponse?: boolean; // get full response instead of just the body
+    resolveWithFullResponse?: boolean;
     followAllRedirects?: boolean;
     followRedirect?: any;
     maxRedirects?: number;
@@ -39,6 +39,7 @@ interface Uris {
 interface Credit {
     session?: string;
     csrfToken: string;
+    githubCookie?: string;
 }
 
 enum Endpoint {

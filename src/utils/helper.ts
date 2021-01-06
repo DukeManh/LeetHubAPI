@@ -28,11 +28,11 @@ class Helper {
             followAllRedirects: options.followAllRedirects,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                Referer: options.referer || Helper.uris.base,
+                Referer: (options.referer !== undefined) ? options.referer : Helper.uris.base,
                 Cookie: options.cookie ? options.cookie : (this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : ''),
                 ...options.extra,
             },
-            resolveWithFullResponse: options.resolveWithFullResponse,
+            resolveWithFullResponse: options.resolveWithFullResponse || true,
             form: options.form,
             body: JSON.stringify(options.body) || '',
         });
@@ -80,6 +80,44 @@ class Helper {
             case 3: return ProblemDifficulty.Hard;
             default: return ProblemDifficulty.Easy;
         }
+    }
+
+    static languageMap(language: string): string {
+        let extension: string;
+        switch (language) {
+            case 'python3':
+                extension = 'py'
+                break;
+            case 'python':
+                extension = 'py';
+                break;
+            case 'typescript':
+                extension = 'ts';
+                break;
+            case 'javascript':
+                extension = 'js';
+                break;
+            case 'rust':
+                extension = 'rs';
+                break;
+            case 'kotlin':
+                extension = 'kt';
+                break;
+            case 'golang':
+                extension = 'go';
+                break;
+            case 'csharp':
+                extension = 'cs';
+                break;
+            case 'ruby':
+                extension = 'rb';
+                break;
+            default:
+                extension = language;
+                break;
+
+        }
+        return extension;
     }
 
     static statusMap(status: string): SubmissionStatus {

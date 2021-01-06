@@ -11,7 +11,7 @@ Accounts.use(cookieSession({
     name: 'session',
     secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
     secure: false,
-    maxAge: 72 * 60 * 60 * 1000,
+    expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
 }));
 
 

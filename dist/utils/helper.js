@@ -36,7 +36,7 @@ class Helper {
                 followRedirect: options.followRedirect,
                 followAllRedirects: options.followAllRedirects,
                 headers: Object.assign({ 'X-Requested-With': 'XMLHttpRequest', Referer: options.referer || Helper.uris.base, Cookie: options.cookie ? options.cookie : (this.credit ? `LEETCODE_SESSION=${this.credit.session};csrftoken=${this.credit.csrfToken}` : '') }, options.extra),
-                resolveWithFullResponse: options.resolveWithFullResponse,
+                resolveWithFullResponse: options.resolveWithFullResponse || true,
                 form: options.form,
                 body: JSON.stringify(options.body) || '',
             });
@@ -77,6 +77,27 @@ class Helper {
             case 3: return interfaces_1.ProblemDifficulty.Hard;
             default: return interfaces_1.ProblemDifficulty.Easy;
         }
+    }
+    static languageMap(language) {
+        let extension;
+        switch (language) {
+            case 'python3':
+                extension = 'py';
+                break;
+            case 'python':
+                extension = 'py';
+                break;
+            case 'typescript':
+                extension = 'ts';
+                break;
+            case 'javascript':
+                extension = 'js';
+                break;
+            default:
+                extension = language;
+                break;
+        }
+        return extension;
     }
     static statusMap(status) {
         switch (status) {
