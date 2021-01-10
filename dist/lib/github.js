@@ -16,13 +16,14 @@ const helper_1 = require("../utils/helper");
 const cheerio_1 = __importDefault(require("cheerio"));
 const config_1 = __importDefault(require("./config"));
 class Github {
-    constructor(cookie, ghSess, dotcomUser, userSession, loggedIn, sessionSameSite) {
+    constructor(cookie, ghSess, dotcomUser, userSession, loggedIn, sessionSameSite, url) {
         this.cookie = cookie;
         this.ghSess = ghSess;
         this.dotcomUser = dotcomUser;
         this.userSession = userSession;
         this.loggedIn = loggedIn;
         this.sessionSameSite = sessionSameSite;
+        this.url = url;
     }
     updateCred(cookies) {
         this.ghSess = helper_1.Helper.parseCookies(cookies, '_gh_sess');
@@ -31,7 +32,7 @@ class Github {
         this.cookie = `_gh_sess=${this.ghSess};dotcom_user=${this.dotcomUser};logged_in=${this.loggedIn};
                         user_session=${this.userSession};__Host-user_session_same_site=${this.sessionSameSite}`;
     }
-    newRepo(name, visibility = 'public', description = '') {
+    newRepo(name, visibility = 'private', description = '') {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let res = yield helper_1.Helper.HttpRequest({
@@ -77,16 +78,17 @@ class Github {
                     }
                 });
                 if (!location) {
-                    throw new Error(`Could not create repo ${name}`);
+                    throw new Error(`Could not create repo ${name}, the repo may already exist`);
                 }
-                return location;
+                this.url = location;
+                return this;
             }
             catch (error) {
                 throw new Error(error);
             }
         });
     }
-    commitNewFile(submission, url, questionTitle, questionSlug, message, description) {
+    commitNewFile(submission, url, questionTitle, questionSlug, message) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let res = yield helper_1.Helper.HttpRequest({
@@ -116,7 +118,7 @@ class Github {
                         value: submission.code,
                         message,
                         placeholder_message: `Leetcode #${submission.id} solution`,
-                        description,
+                        description: '',
                         'commit-choice': 'direct',
                         'target-branch': 'main',
                         commit,
@@ -136,7 +138,8 @@ class Github {
                 if (!location) {
                     throw new Error(`An error has occured, file ${filename} could not be commited, try again.`);
                 }
-                return location;
+                this.url = location;
+                return this;
             }
             catch (err) {
                 throw new Error(err);

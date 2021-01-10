@@ -10,6 +10,7 @@
             "request": "launch",
             "type": "node-terminal",
             "skipFiles": [
+                "${workspaceFolder}/node_modules/**/*.js",
                 "<node_internals>/**"
             ],
         },

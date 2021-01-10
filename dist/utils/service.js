@@ -26,8 +26,8 @@ function login({ username, password, end }) {
         else {
             endpoint = interfaces_1.Endpoint.US;
         }
-        const leetcode = yield leetcode_1.default.build(username, password, endpoint).catch(err => { throw new Error(err); });
-        const user = yield leetcode.getGlobalData().catch(err => { throw new Error(err); });
+        const leetcode = yield leetcode_1.default.build(username, password, endpoint).catch(err => { throw new Error(err.message); });
+        const user = yield leetcode.getGlobalData().catch(err => { throw new Error(err.message); });
         const profile = yield leetcode.getProfile(user.userStatus.username);
         return Object.assign(Object.assign({ credit: leetcode.Credit }, user), profile.matchedUser.submitStats);
     });

@@ -30,7 +30,8 @@ class Leetcode {
     get Credit() {
         return {
             session: this.session,
-            csrfToken: this.csrfToken
+            csrfToken: this.csrfToken,
+            githubCookie: this.ghCookie
         };
     }
     static build(username, password, endpoint) {

@@ -10,6 +10,7 @@ export default class Github {
         public userSession?: string,
         public loggedIn?: string,
         public sessionSameSite?: string,
+        public url?: string
     ) { }
 
     updateCred(cookies: string[]) {
@@ -20,7 +21,7 @@ export default class Github {
                         user_session=${this.userSession};__Host-user_session_same_site=${this.sessionSameSite}`
     }
 
-    async newRepo(name: string, visibility: string = 'public', description: string = ''): Promise<string> {
+    async newRepo(name: string, visibility: string = 'private', description: string = ''): Promise<Github> {
         try {
             let res = await Helper.HttpRequest({
                 url: config.gitHub.new,
@@ -71,16 +72,18 @@ export default class Github {
             });
 
             if (!location) {
-                throw new Error(`Could not create repo ${name}`);
+                throw new Error(`Could not create repo ${name}, the repo may already exist`);
             }
 
-            return location;
+            this.url = location;
+
+            return this;
         } catch (error) {
             throw new Error(error);
         }
     }
 
-    async commitNewFile(submission: Submission, url: string, questionTitle: string, questionSlug: string, message: string, description: string): Promise<string> {
+    async commitNewFile(submission: Submission, url: string, questionTitle: string, questionSlug: string, message: string): Promise<Github> {
         try {
             let res = await Helper.HttpRequest({
                 url: url + '/new/main',
@@ -113,7 +116,7 @@ export default class Github {
                     value: submission.code,
                     message,
                     placeholder_message: `Leetcode #${submission.id} solution`,
-                    description,
+                    description: '',
                     'commit-choice': 'direct',
                     'target-branch': 'main',
                     commit,
@@ -135,7 +138,8 @@ export default class Github {
                 throw new Error(`An error has occured, file ${filename} could not be commited, try again.`);
             }
 
-            return location;
+            this.url = location;
+            return this;
         }
         catch (err) {
             throw new Error(err);

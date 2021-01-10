@@ -37,6 +37,10 @@ app.use(cookieSession({
     expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
 }));
 
+app.use((req, res, next) => {
+    req.session.nowInMinutes = Math.floor(Date.now() / 60e3)
+    next()
+})
 
 function authorize(req: any, res: any, next: any) {
     const session: any = req.session;

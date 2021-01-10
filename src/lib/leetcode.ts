@@ -49,7 +49,8 @@ class Leetcode {
     get Credit(): Credit {
         return {
             session: this.session,
-            csrfToken: this.csrfToken
+            csrfToken: this.csrfToken,
+            githubCookie: this.ghCookie
         }
     }
 

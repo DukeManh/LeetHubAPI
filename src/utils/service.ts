@@ -12,8 +12,8 @@ async function login({ username, password, end }): Promise<any> {
     else {
         endpoint = Endpoint.US;
     }
-    const leetcode: Leetcode = await Leetcode.build(username, password, endpoint).catch(err => { throw new Error(err) });
-    const user = await leetcode.getGlobalData().catch(err => { throw new Error(err) });
+    const leetcode: Leetcode = await Leetcode.build(username, password, endpoint).catch(err => { throw new Error(err.message) });
+    const user = await leetcode.getGlobalData().catch(err => { throw new Error(err.message) });
     const profile = await leetcode.getProfile(user.userStatus.username);
     return {
         credit: leetcode.Credit,
