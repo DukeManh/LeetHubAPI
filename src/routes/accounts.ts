@@ -19,10 +19,11 @@ Accounts.use(cookieSession({
 Accounts.route('/')
     .get((req, res, next) => {
         const session = req.session;
-        if (session.csrftoken && session.session) {
+        if (session.csrfToken && session.session) {
             build({
                 session: session.session,
-                csrfToken: session.csrftoken
+                csrfToken: session.csrfToken,
+                githubCookie: session.ghCookie
             }, session.endpoint)
                 .then(user => {
                     res.status(200).json(user);
@@ -42,9 +43,9 @@ Accounts.route('/login')
         login(req.body)
             .then(user => {
                 const session: any = {
-                    csrftoken: user.credit.csrfToken,
+                    csrfToken: user.credit.csrfToken,
                     session: user.credit.session,
-                    ghCookie: user.credit.ghCookie,
+                    ghCookie: user.credit.githubCookie,
                     username: user.userStatus.username,
                     endpoint: user.userStatus.requestRegion,
                 }

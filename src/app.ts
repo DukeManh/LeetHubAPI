@@ -3,11 +3,12 @@ import morgan from 'morgan';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import cookieSession from 'cookie-session';
+import { Helper } from './utils/helper';
+import { build } from './utils/service';
 import Accounts from './routes/accounts';
 import Submissions from './routes/submissions';
 import Questions from './routes/questions';
-import { Helper } from './utils/helper';
-import { build } from './utils/service';
+import Github from './routes/repos';
 
 const app = Express();
 const port = 8080;
@@ -19,7 +20,6 @@ const corsOptions = {
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
-            console.log(origin);
             callback(new Error('Not allowed by CORS'))
         }
     },
@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 
 function authorize(req: any, res: any, next: any) {
     const session: any = req.session;
-    if (!session.csrftoken && !session.session) {
+    if (!session.csrfToken && !session.session) {
         req.session = null;
         res.status(401).send('Authorization failed')
     }
@@ -53,7 +53,7 @@ function authorize(req: any, res: any, next: any) {
             build(
                 {
                     session: session.session,
-                    csrfToken: session.csrftoken
+                    csrfToken: session.csrfToken
                 },
                 session.endpoint)
                 .then(user => {
@@ -74,6 +74,7 @@ function authorize(req: any, res: any, next: any) {
 app.use('/accounts', Accounts);
 app.use('/submissions', authorize, Submissions);
 app.use('/questions', authorize, Questions);
+app.use('/github', authorize, Github);
 
 app.all('*', (req, res, next) => {
     res.status(404).send('Page Not Found');

@@ -8,11 +8,12 @@ const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cookie_session_1 = __importDefault(require("cookie-session"));
+const helper_1 = require("./utils/helper");
+const service_1 = require("./utils/service");
 const accounts_1 = __importDefault(require("./routes/accounts"));
 const submissions_1 = __importDefault(require("./routes/submissions"));
 const questions_1 = __importDefault(require("./routes/questions"));
-const helper_1 = require("./utils/helper");
-const service_1 = require("./utils/service");
+const repos_1 = __importDefault(require("./routes/repos"));
 const app = express_1.default();
 const port = 8080;
 const whitelist = ['http://localhost:3000', '*'];
@@ -23,7 +24,6 @@ const corsOptions = {
             callback(null, true);
         }
         else {
-            console.log(origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 });
 function authorize(req, res, next) {
     const session = req.session;
-    if (!session.csrftoken && !session.session) {
+    if (!session.csrfToken && !session.session) {
         req.session = null;
         res.status(401).send('Authorization failed');
     }
@@ -53,7 +53,7 @@ function authorize(req, res, next) {
         if (!helper_1.Helper.credit) {
             service_1.build({
                 session: session.session,
-                csrfToken: session.csrftoken
+                csrfToken: session.csrfToken
             }, session.endpoint)
                 .then(user => {
                 next();
@@ -71,6 +71,7 @@ function authorize(req, res, next) {
 app.use('/accounts', accounts_1.default);
 app.use('/submissions', authorize, submissions_1.default);
 app.use('/questions', authorize, questions_1.default);
+app.use('/github', authorize, repos_1.default);
 app.all('*', (req, res, next) => {
     res.status(404).send('Page Not Found');
 });

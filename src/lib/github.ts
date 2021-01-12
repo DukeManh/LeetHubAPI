@@ -17,8 +17,7 @@ export default class Github {
         this.ghSess = Helper.parseCookies(cookies, '_gh_sess');
         this.userSession = Helper.parseCookies(cookies, 'user_session');
         this.sessionSameSite = Helper.parseCookies(cookies, '__Host-user_session_same_site');
-        this.cookie = `_gh_sess=${this.ghSess};dotcom_user=${this.dotcomUser};logged_in=${this.loggedIn};
-                        user_session=${this.userSession};__Host-user_session_same_site=${this.sessionSameSite}`
+        this.cookie = `_gh_sess=${this.ghSess};dotcom_user=${this.dotcomUser};logged_in=${this.loggedIn};user_session=${this.userSession};__Host-user_session_same_site=${this.sessionSameSite}`
     }
 
     async newRepo(name: string, visibility: string = 'private', description: string = ''): Promise<Github> {

@@ -29,8 +29,7 @@ class Github {
         this.ghSess = helper_1.Helper.parseCookies(cookies, '_gh_sess');
         this.userSession = helper_1.Helper.parseCookies(cookies, 'user_session');
         this.sessionSameSite = helper_1.Helper.parseCookies(cookies, '__Host-user_session_same_site');
-        this.cookie = `_gh_sess=${this.ghSess};dotcom_user=${this.dotcomUser};logged_in=${this.loggedIn};
-                        user_session=${this.userSession};__Host-user_session_same_site=${this.sessionSameSite}`;
+        this.cookie = `_gh_sess=${this.ghSess};dotcom_user=${this.dotcomUser};logged_in=${this.loggedIn};user_session=${this.userSession};__Host-user_session_same_site=${this.sessionSameSite}`;
     }
     newRepo(name, visibility = 'private', description = '') {
         return __awaiter(this, void 0, void 0, function* () {

@@ -4,21 +4,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const body_parser_1 = __importDefault(require("body-parser"));
 const github_1 = __importDefault(require("../lib/github"));
 const submission_1 = __importDefault(require("../lib/submission"));
 const Repo = express_1.default.Router();
+Repo.use(body_parser_1.default.urlencoded({ extended: true }));
+Repo.use(body_parser_1.default.json());
 Repo.use((req, res, next) => {
     if (req.session && req.session.ghCookie) {
         next();
     }
     else {
-        res.status(401).send('Authorized');
+        res.status(401).send('Authorization failed');
     }
 });
-Repo.route('/create')
+Repo.route('/newrepo')
     .post((req, res, next) => {
     const gh = new github_1.default(req.session.ghCookie);
-    gh.newRepo(req.body.repoName)
+    console.log(req.body);
+    gh.newRepo(req.body.values.repoName)
         .then((response) => {
         req.session.ghCookie = response.cookie;
         res.status(200).json({ url: response.url });
@@ -40,4 +44,5 @@ Repo.route('/commit')
         res.status(400).send(err);
     });
 });
-//# sourceMappingURL=Repos.js.map
+exports.default = Repo;
+//# sourceMappingURL=repos.js.map
