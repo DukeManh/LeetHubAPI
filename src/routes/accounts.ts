@@ -7,12 +7,6 @@ const Accounts = Express.Router();
 
 Accounts.use(bodyParser.urlencoded({ extended: true }))
 Accounts.use(bodyParser.json());
-Accounts.use(cookieSession({
-    name: 'session',
-    secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
-    secure: false,
-    expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
-}));
 
 
 
@@ -29,7 +23,6 @@ Accounts.route('/')
                     res.status(200).json(user);
                 })
                 .catch(err => {
-                    req.session = null;
                     res.status(401).send(err)
                 });
         }

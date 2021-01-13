@@ -120,20 +120,18 @@ class Helper {
         return extension;
     }
 
-    static statusMap(status: string): SubmissionStatus {
+    static statusMap(status: string): string {
         switch (status) {
-            case 'Accepted': return SubmissionStatus.Accepted;
-            case 'ac': return SubmissionStatus.Accepted;
-            case 'Compile Error': return SubmissionStatus['Compile Error'];
-            case 'Time Limit Exceeded': return SubmissionStatus['Time Limit Exceeded'];
-            case 'Wrong Answer': return SubmissionStatus["Wrong answer"];
+            case 'Accepted': return "A/C";
+            case 'Time Limit Exceeded': return "TLE";
+            case 'ac': return "A/C";
 
-            case '0': return SubmissionStatus.Accepted;
-            case '1': return SubmissionStatus['Wrong Answer'];
-            case '14': return SubmissionStatus['Time Limit Exceeded'];
-            case '20': return SubmissionStatus['Compile Error'];
-
-            default: return SubmissionStatus['Wrong answer'];
+            case '10': return "AC";
+            case '11': return "Wrong Answer";
+            case '14': return "TLE";
+            case '15': return "Runtime Error";
+            case '20': return "Complie Error";
+            default: return status;
         }
     }
 

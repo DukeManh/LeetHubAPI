@@ -5,17 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const cookie_session_1 = __importDefault(require("cookie-session"));
 const service_1 = require("../utils/service");
 const Accounts = express_1.default.Router();
 Accounts.use(body_parser_1.default.urlencoded({ extended: true }));
 Accounts.use(body_parser_1.default.json());
-Accounts.use(cookie_session_1.default({
-    name: 'session',
-    secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
-    secure: false,
-    expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
-}));
 Accounts.route('/')
     .get((req, res, next) => {
     const session = req.session;
@@ -29,7 +22,6 @@ Accounts.route('/')
             res.status(200).json(user);
         })
             .catch(err => {
-            req.session = null;
             res.status(401).send(err);
         });
     }

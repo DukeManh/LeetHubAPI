@@ -15,9 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const helper_1 = require("../utils/helper");
 const submission_1 = __importDefault(require("./submission"));
 class Problem {
-    constructor(slug, id, title, difficulty, locked, status, tag, totalAccepted, totalSubmission, sampleTestCase, content, codeSnippets) {
+    constructor(slug, id, questionFrontendId, title, difficulty, locked, status, tag, totalAccepted, totalSubmission, sampleTestCase, content, codeSnippets) {
         this.slug = slug;
         this.id = id;
+        this.questionFrontendId = questionFrontendId;
         this.title = title;
         this.difficulty = difficulty;
         this.locked = locked;
@@ -39,6 +40,7 @@ class Problem {
             query questionDetail($titleSlug: String!){
                 question(titleSlug: $titleSlug){
                     questionId
+                    questionFrontendId
                     title
                     difficulty
                     status
@@ -57,6 +59,7 @@ class Problem {
             });
             const question = response.question;
             this.id = Number(question.questionId);
+            this.questionFrontendId = Number(question.questionFrontendId);
             this.title = question.title;
             this.difficulty = question.difficulty;
             this.status = helper_1.Helper.statusMap(question.status);

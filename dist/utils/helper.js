@@ -116,16 +116,15 @@ class Helper {
     }
     static statusMap(status) {
         switch (status) {
-            case 'Accepted': return interfaces_1.SubmissionStatus.Accepted;
-            case 'ac': return interfaces_1.SubmissionStatus.Accepted;
-            case 'Compile Error': return interfaces_1.SubmissionStatus['Compile Error'];
-            case 'Time Limit Exceeded': return interfaces_1.SubmissionStatus['Time Limit Exceeded'];
-            case 'Wrong Answer': return interfaces_1.SubmissionStatus["Wrong answer"];
-            case '0': return interfaces_1.SubmissionStatus.Accepted;
-            case '1': return interfaces_1.SubmissionStatus['Wrong Answer'];
-            case '14': return interfaces_1.SubmissionStatus['Time Limit Exceeded'];
-            case '20': return interfaces_1.SubmissionStatus['Compile Error'];
-            default: return interfaces_1.SubmissionStatus['Wrong answer'];
+            case 'Accepted': return "A/C";
+            case 'Time Limit Exceeded': return "TLE";
+            case 'ac': return "A/C";
+            case '10': return "AC";
+            case '11': return "Wrong Answer";
+            case '14': return "TLE";
+            case '15': return "Runtime Error";
+            case '20': return "Complie Error";
+            default: return status;
         }
     }
     static switchEndPoint(endPoint) {

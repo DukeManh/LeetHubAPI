@@ -12,10 +12,11 @@ class Problem {
     constructor(
         readonly slug: string,
         public id?: number,
+        public questionFrontendId?: number,
         public title?: string,
         public difficulty?: ProblemDifficulty,
         public locked?: boolean,
-        public status?: SubmissionStatus,
+        public status?: string,
         public tag?: string[],
         public totalAccepted?: number,
         public totalSubmission?: number,
@@ -31,6 +32,7 @@ class Problem {
             query questionDetail($titleSlug: String!){
                 question(titleSlug: $titleSlug){
                     questionId
+                    questionFrontendId
                     title
                     difficulty
                     status
@@ -49,6 +51,7 @@ class Problem {
         });
         const question = response.question;
         this.id = Number(question.questionId);
+        this.questionFrontendId = Number(question.questionFrontendId);
         this.title = question.title;
         this.difficulty = question.difficulty;
         this.status = Helper.statusMap(question.status);

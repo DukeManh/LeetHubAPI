@@ -34,18 +34,17 @@ app.use(cookieSession({
     name: 'session',
     secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
     secure: false,
-    expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
+    maxAge: 1000 * 60 * 60 * 72,
 }));
 
 app.use((req, res, next) => {
     req.session.nowInMinutes = Math.floor(Date.now() / 60e3)
     next()
-})
+});
 
 function authorize(req: any, res: any, next: any) {
     const session: any = req.session;
     if (!session.csrfToken && !session.session) {
-        req.session = null;
         res.status(401).send('Authorization failed')
     }
     else {
@@ -60,7 +59,6 @@ function authorize(req: any, res: any, next: any) {
                     next();
                 })
                 .catch(err => {
-                    req.session = null;
                     res.status(401).send(err)
                 }
                 );

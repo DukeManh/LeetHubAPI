@@ -10,7 +10,7 @@ class Submission {
 
     constructor(
         public id: number,
-        public status?: SubmissionStatus,
+        public status?: string,
         public lang?: string,
         public runtime?: string,
         public timestamps?: string,
