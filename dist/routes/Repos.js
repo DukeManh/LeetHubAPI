@@ -28,20 +28,22 @@ Repo.route('/newrepo')
         res.status(200).json({ url: response.url });
     })
         .catch(err => {
-        res.status(400).send(err);
+        res.status(400).send(err.message);
     });
 });
 Repo.route('/commit')
     .post((req, res, next) => {
     const gh = new github_1.default(req.session.ghCookie);
     const body = req.body;
-    gh.commitNewFile(new submission_1.default(body.id), body.url, body.title, body.slug, body.commit)
+    const sub = body.sub;
+    const submission = new submission_1.default(sub.id, sub.status, sub.lang, sub.runtime, sub.timestamps, sub.url, sub.memory, sub.code);
+    gh.commitNewFile(submission, body.url, body.frontendId, body.title, body.slug, body.message, body.description)
         .then((response) => {
-        req.session.ghCookie = response.cookie;
+        req.session = Object.assign(Object.assign({}, req.session), { ghCookie: response.cookie });
         res.status(200).send();
     })
         .catch((err) => {
-        res.status(400).send(err);
+        res.status(400).send(err.message);
     });
 });
 exports.default = Repo;

@@ -17,7 +17,7 @@ Questions.route('/')
         subs.stat_status_pairs = subs.stat_status_pairs.filter(ssp => ssp.status);
         res.status(200).json(subs);
     })
-        .catch(err => res.status(400).send(err));
+        .catch(err => res.status(400).send(err.message));
 });
 Questions.route('/:slug')
     .get((req, res) => {
@@ -26,7 +26,7 @@ Questions.route('/:slug')
         .then((prob) => {
         res.status(200).json(prob);
     }).catch((err) => {
-        res.status(404).send(err);
+        res.status(404).send(err.message);
     });
 });
 exports.default = Questions;

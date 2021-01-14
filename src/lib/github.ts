@@ -78,11 +78,11 @@ export default class Github {
 
             return this;
         } catch (error) {
-            throw new Error(error);
+            throw error;
         }
     }
 
-    async commitNewFile(submission: Submission, url: string, questionTitle: string, questionSlug: string, message: string): Promise<Github> {
+    async commitNewFile(submission: Submission, url: string, questionFrontendId: number, questionTitle: string, questionSlug: string, message: string, description: string): Promise<Github> {
         try {
             let res = await Helper.HttpRequest({
                 url: url + '/new/main',
@@ -97,7 +97,8 @@ export default class Github {
             const authenticityToken = $(`form[action=${url.replace('https://github.com', '').replace(/\//g, '\\\/')}\\/create\\/main] input[name=authenticity_token]`).attr('value');
             const commit = $('input[class=js-commit-oid]').attr('value');
 
-            const filename = questionSlug + '.' + Helper.languageMap(submission.lang);
+            const filename = questionSlug + `-${submission.timestamps}.` + Helper.languageMap(submission.lang);
+            const filePath = `src/${questionFrontendId}. ${questionTitle}/${filename}`;
 
             let location: string;
             res = await Helper.HttpRequest({
@@ -110,12 +111,12 @@ export default class Github {
                 form: {
                     authenticity_token: authenticityToken,
                     filename,
-                    new_filename: `src/${questionTitle}/${filename}`,
+                    new_filename: filePath,
                     content_changed: true,
                     value: submission.code,
                     message,
                     placeholder_message: `Leetcode #${submission.id} solution`,
-                    description: '',
+                    description,
                     'commit-choice': 'direct',
                     'target-branch': 'main',
                     commit,
@@ -134,14 +135,14 @@ export default class Github {
             })
 
             if (!location) {
-                throw new Error(`An error has occured, file ${filename} could not be commited, try again.`);
+                throw new Error(`File might already exist or you don't have permission to commit to this repository`);
             }
 
             this.url = location;
             return this;
         }
         catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 }

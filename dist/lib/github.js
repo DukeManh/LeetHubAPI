@@ -83,11 +83,11 @@ class Github {
                 return this;
             }
             catch (error) {
-                throw new Error(error);
+                throw error;
             }
         });
     }
-    commitNewFile(submission, url, questionTitle, questionSlug, message) {
+    commitNewFile(submission, url, questionFrontendId, questionTitle, questionSlug, message, description) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let res = yield helper_1.Helper.HttpRequest({
@@ -100,7 +100,8 @@ class Github {
                 const $ = cheerio_1.default.load(res.body);
                 const authenticityToken = $(`form[action=${url.replace('https://github.com', '').replace(/\//g, '\\\/')}\\/create\\/main] input[name=authenticity_token]`).attr('value');
                 const commit = $('input[class=js-commit-oid]').attr('value');
-                const filename = questionSlug + '.' + helper_1.Helper.languageMap(submission.lang);
+                const filename = questionSlug + `-${submission.timestamps}.` + helper_1.Helper.languageMap(submission.lang);
+                const filePath = `src/${questionFrontendId}. ${questionTitle}/${filename}`;
                 let location;
                 res = yield helper_1.Helper.HttpRequest({
                     url: url + '/create/main',
@@ -112,12 +113,12 @@ class Github {
                     form: {
                         authenticity_token: authenticityToken,
                         filename,
-                        new_filename: `src/${questionTitle}/${filename}`,
+                        new_filename: filePath,
                         content_changed: true,
                         value: submission.code,
                         message,
                         placeholder_message: `Leetcode #${submission.id} solution`,
-                        description: '',
+                        description,
                         'commit-choice': 'direct',
                         'target-branch': 'main',
                         commit,
@@ -135,13 +136,13 @@ class Github {
                     }
                 });
                 if (!location) {
-                    throw new Error(`An error has occured, file ${filename} could not be commited, try again.`);
+                    throw new Error(`File might already exist or you don't have permission commit to this repository`);
                 }
                 this.url = location;
                 return this;
             }
             catch (err) {
-                throw new Error(err);
+                throw err;
             }
         });
     }

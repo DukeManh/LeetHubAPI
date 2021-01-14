@@ -16,7 +16,7 @@ Submissions.route('/:question_slug')
     problem.getSubmission().then((submissions) => {
         res.status(200).send(submissions);
     }).catch((err) => {
-        res.status(404).send(err);
+        res.status(404).send(err.message);
     });
 });
 Submissions.route('/detail/:id')
@@ -25,7 +25,7 @@ Submissions.route('/detail/:id')
     submission.detail().then((sub) => {
         res.status(200).json(sub);
     }).catch((err) => {
-        res.status(400).send(err);
+        res.status(400).send(err.message);
     });
 });
 exports.default = Submissions;

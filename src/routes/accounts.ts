@@ -23,7 +23,7 @@ Accounts.route('/')
                     res.status(200).json(user);
                 })
                 .catch(err => {
-                    res.status(401).send(err)
+                    res.status(401).send(err.message)
                 });
         }
         else {
@@ -46,7 +46,7 @@ Accounts.route('/login')
                 res.status(200).json(user);
             })
             .catch(err => {
-                res.status(401).send(err)
+                res.status(401).send(err.message)
             });
     });
 
