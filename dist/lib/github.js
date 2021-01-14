@@ -136,7 +136,7 @@ class Github {
                     }
                 });
                 if (!location) {
-                    throw new Error(`File might already exist or you don't have permission commit to this repository`);
+                    throw new Error(`File might already exist or you don't have permission to commit to this repository`);
                 }
                 this.url = location;
                 return this;
