@@ -38,6 +38,7 @@ app.use(cookie_session_1.default({
     secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
     secure: false,
     maxAge: 1000 * 60 * 60 * 72,
+    sameSite: 'lax'
 }));
 app.use((req, res, next) => {
     req.session.nowInMinutes = Math.floor(Date.now() / 60e3);

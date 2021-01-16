@@ -21,7 +21,6 @@ Repo.use((req, res, next) => {
 Repo.route('/newrepo')
     .post((req, res, next) => {
     const gh = new github_1.default(req.session.ghCookie);
-    console.log(req.body);
     gh.newRepo(req.body.values.repoName)
         .then((response) => {
         req.session.ghCookie = response.cookie;

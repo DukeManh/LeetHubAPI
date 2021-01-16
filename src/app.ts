@@ -35,6 +35,7 @@ app.use(cookieSession({
     secret: 'alsafj39jsdfj309fjsdffjlfsdjfoseiru03',
     secure: false,
     maxAge: 1000 * 60 * 60 * 72,
+    sameSite: 'lax'
 }));
 
 app.use((req, res, next) => {

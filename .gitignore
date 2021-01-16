@@ -2,3 +2,4 @@ node_modules
 src/lib/test.ts
 .vscode/*
 tslint.json
+.env
