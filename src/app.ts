@@ -3,15 +3,19 @@ import morgan from 'morgan';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import cookieSession from 'cookie-session';
-import { Helper } from './utils/helper';
-import { build } from './utils/service';
+import compression from 'compression';
+import helmet from 'helmet';
+
 import Accounts from './routes/accounts';
 import Submissions from './routes/submissions';
 import Questions from './routes/questions';
 import Github from './routes/repos';
+import { Helper } from './utils/helper';
+import { build } from './utils/service';
+import { port } from './config';
 
 const app = Express();
-const port = 8080;
+const PORT = port || 8080;
 
 const whitelist = ['http://localhost:3000', '*'];
 app.disable('etag');
@@ -28,6 +32,8 @@ const corsOptions = {
 app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 
+app.use(compression());
+app.use(helmet());
 app.use(morgan('tiny'));
 app.use(cookieParser());
 app.use(cookieSession({
@@ -80,7 +86,7 @@ app.all('*', (req, res, next) => {
 })
 
 
-app.listen(port, () => {
+app.listen(PORT, () => {
     // tslint:disable-next-line: no-console
-    return console.log('Server listening on port http://localhost:' + port);
+    return console.log('Server listening on port http://localhost:' + PORT);
 })
